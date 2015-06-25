@@ -40,12 +40,14 @@ do_compile () {
 
 do_deploy () {
 	install -d ${DEPLOY_DIR_IMAGE}
-	if [ -e "${S}/barebox-flash-image" ]; then
+	if [ -e ${S}/barebox-flash-image ]; then
 		install -m 644 -t ${DEPLOY_DIR_IMAGE}/ ${S}/barebox-flash-image
 	fi
-	if [ -e "${S}/*.img" ]; then
-		install -m 644 -t ${DEPLOY_DIR_IMAGE}/ ${S}/images/*.img
-	fi
+	for IMAGE in ${S}/images/*.img; do
+		if [ -e ${IMAGE} ]; then
+			install -m 644 -t ${DEPLOY_DIR_IMAGE}/ ${IMAGE}
+		fi
+	done
 }
 
 addtask deploy before do_build after do_compile
