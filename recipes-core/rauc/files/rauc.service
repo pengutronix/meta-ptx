@@ -1,0 +1,12 @@
+[Unit]
+Description=Rauc Update Service
+
+[Service]
+Type=dbus
+BusName=de.pengutronix.rauc
+#User=root
+ExecStart=@BINDIR@/rauc service
+
+[Install]
+WantedBy=multi-user.target
+
