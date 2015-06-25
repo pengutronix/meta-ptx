@@ -1,0 +1,90 @@
+From a2eb91de7d3b7a926f18fec3dc97ded15a445b0a Mon Sep 17 00:00:00 2001
+From: Enrico Jorns <ejo@pengutronix.de>
+Date: Wed, 24 Jun 2015 15:44:19 +0200
+Subject: [PATCH] remove init option: use default if load failed
+
+This change is done do match the behavior with barebox.
+If loading the environment from storage failed, the default values will
+be used. Thus an explicit initalization of the state is not required
+anymore.
+
+Signed-off-by: Enrico Jorns <ejo@pengutronix.de>
+---
+ src/barebox-state.c | 19 ++++---------------
+ 1 file changed, 4 insertions(+), 15 deletions(-)
+
+diff --git a/src/barebox-state.c b/src/barebox-state.c
+index 02e085b..1e0c7f1 100644
+--- a/src/barebox-state.c
++++ b/src/barebox-state.c
+@@ -1996,7 +1996,6 @@ static struct option long_options[] = {
+ 	{"name",	required_argument,	0,	'n' },
+ 	{"dump",	no_argument,		0,	'd' },
+ 	{"dump-shell",	no_argument,		0,	OPT_DUMP_SHELL },
+-	{"init",	no_argument,		0,	'i' },
+ 	{"verbose",	no_argument,		0,	'v' },
+ 	{"help",	no_argument,		0,	'h' },
+ };
+@@ -2011,7 +2010,6 @@ static void usage(char *name)
+ "-n, --name <name>                         specify the state to use (default=\"state\")\n"
+ "-d, --dump                                dump the state\n"
+ "--dump-shell                              dump the state suitable for shell sourcing\n"
+-"-i, --init                                initialize the state (do not load from storage)\n"
+ "-v, --verbose                             increase verbosity\n"
+ "--help                                    this help\n",
+ 	name);
+@@ -2031,7 +2029,7 @@ int main(int argc, char *argv[])
+ 	struct state *state;
+ 	struct state_variable *v;
+ 	int ret, c, option_index;
+-	int do_dump = 0, do_dump_shell = 0, do_initialize = 0;
++	int do_dump = 0, do_dump_shell = 0;
+ 	struct state_set_get *sg;
+ 	struct list_head sg_list;
+ 	char *statename = "/state";
+@@ -2039,7 +2037,7 @@ int main(int argc, char *argv[])
+ 	INIT_LIST_HEAD(&sg_list);
+ 
+ 	while (1) {
+-		c = getopt_long(argc, argv, "hg:s:divn:", long_options, &option_index);
++		c = getopt_long(argc, argv, "hg:s:dvn:", long_options, &option_index);
+ 		if (c < 0)
+ 			break;
+ 		switch (c) {
+@@ -2061,9 +2059,6 @@ int main(int argc, char *argv[])
+ 		case 'd':
+ 			do_dump = 1;
+ 			break;
+-		case 'i':
+-			do_initialize = 1;
+-			break;
+ 		case OPT_DUMP_SHELL:
+ 			do_dump_shell = 1;
+ 			break;
+@@ -2079,13 +2074,7 @@ int main(int argc, char *argv[])
+ 	if (IS_ERR(state))
+ 		exit(1);
+ 
+-	if (!do_initialize) {
+-		ret = state_load(state);
+-		if (ret) {
+-			fprintf(stderr, "Cannot load state: %s\n", strerror(-ret));
+-			exit(1);
+-		}
+-	}
++	state_load(state);
+ 
+ 	if (do_dump) {
+ 		state_for_each_var(state, v) {
+@@ -2146,7 +2135,7 @@ int main(int argc, char *argv[])
+ 		}
+ 	}
+ 
+-	if (do_initialize || state->dirty) {
++	if (state->dirty) {
+ 		ret = state_save(state);
+ 		if (ret) {
+ 			fprintf(stderr, "Failed to save state: %s\n", strerror(-ret));
+-- 
+2.1.4
+
