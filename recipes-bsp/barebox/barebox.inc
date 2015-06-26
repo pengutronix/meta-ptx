@@ -13,10 +13,7 @@ inherit cml1
 
 DEPENDS = "libusb1-native"
 
-SRC_URI = " \
-	http://barebox.org/download/barebox-${PV}.tar.bz2 \
-	file://defconfig \
-	"
+SRC_URI = "http://barebox.org/download/barebox-${PV}.tar.bz2"
 
 S = "${WORKDIR}/barebox-${PV}"
 
