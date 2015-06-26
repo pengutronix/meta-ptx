@@ -23,8 +23,14 @@ S = "${WORKDIR}/barebox-${PV}"
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
 do_configure_prepend() {
-	   cp ${WORKDIR}/defconfig ${S}/.config
-	   oe_runmake oldconfig
+	cp ${WORKDIR}/defconfig ${S}/.config
+
+	# do not compile tools when using KERNEL_CC/KERNEL_LD
+	echo CONFIG_BAREBOXENV_TARGET=n >> ${S}/.config
+	echo CONFIG_BAREBOXCRC32_TARGET=n >> ${S}/.config
+	echo CONFIG_KERNEL_INSTALL_TARGET=n >> ${S}/.config
+	echo CONFIG_IMD_TARGET=n >> ${S}/.config
+	oe_runmake oldconfig
 }
 
 do_compile () {
@@ -35,7 +41,10 @@ do_compile () {
 	unset LDFLAGS
 	unset CFLAGS
 	unset CPPFLAGS
-	oe_runmake
+	unset CXXFLAGS
+	unset MACHINE
+
+	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 }
 
 do_deploy () {
