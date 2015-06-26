@@ -31,6 +31,15 @@ do_configure_prepend() {
 }
 
 do_compile () {
+	# If there is a 'barebox-defaultenv' directory, append its content
+	# to the compiled environment
+	if [ -d ${WORKDIR}/barebox-defaultenv/ ]; then \
+		cp -r ${WORKDIR}/barebox-defaultenv ${S}/.yocto-defaultenv; \
+	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
+		                ${B}/.config; \
+
+	fi
+
 	# Barebox uses pkg-config only for building native tools
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
