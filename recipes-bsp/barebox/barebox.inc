@@ -31,10 +31,10 @@ do_configure_prepend() {
 }
 
 do_compile () {
-	# If there is a 'barebox-defaultenv' directory, append its content
+	# If there is an 'env' directory, append its content
 	# to the compiled environment
-	if [ -d ${WORKDIR}/barebox-defaultenv/ ]; then \
-		cp -r ${WORKDIR}/barebox-defaultenv ${S}/.yocto-defaultenv; \
+	if [ -d ${WORKDIR}/env/ ]; then \
+		cp -r ${WORKDIR}/env ${S}/.yocto-defaultenv; \
 	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
 		                ${B}/.config; \
 
