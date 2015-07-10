@@ -2,7 +2,7 @@ include rauc.inc
 PR = "r9"
 
 SRC_URI_append = " \ 
-	git://git-customers.pengutronix.de/rauc.git;protocol=ssh;user=gitolite \
+	git://github.com/jluebbe/rauc.git;protocol=https \
 	file://openssl-ca/dev-ca.pem "
 
 PV = "0+git${SRCPV}"
