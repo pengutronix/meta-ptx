@@ -53,6 +53,9 @@ do_compile () {
 	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}"
 }
 
+# Suffix that allows to create different barebox images in one BSP
+BAREBOX_IMAGE_SUFFIX = ""
+
 do_deploy () {
 	install -d ${DEPLOY_DIR_IMAGE}
 	if [ -e ${S}/barebox-flash-image ]; then
@@ -60,7 +63,9 @@ do_deploy () {
 	fi
 	for IMAGE in ${S}/images/*.img; do
 		if [ -e ${IMAGE} ]; then
-			install -m 644 -t ${DEPLOY_DIR_IMAGE}/ ${IMAGE}
+			BAREBOX_IMG_BASENAME=$(basename ${IMAGE} .img)${BAREBOX_IMAGE_SUFFIX}
+			install -m 644 -T ${IMAGE} ${DEPLOY_DIR_IMAGE}/${BAREBOX_IMG_BASENAME}-${DATETIME}.img
+			ln -sf ${BAREBOX_IMG_BASENAME}-${DATETIME}.img ${DEPLOY_DIR_IMAGE}/${BAREBOX_IMG_BASENAME}.img
 		fi
 	done
 }
