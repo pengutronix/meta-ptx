@@ -8,6 +8,7 @@ SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 
 DEPENDS = "squashfs-tools-native curl openssl glib-2.0"
 RDEPENDS_${PN} = "barebox-state"
+RDEPENDS_${PN}_class-native = ""
 
 FILES_${PN}_append = " /mnt/rauc"
 
