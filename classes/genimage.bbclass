@@ -18,6 +18,8 @@ do_genimage () {
     rm -rf ${WORKDIR}/genimage-tmp
     mkdir -p ${WORKDIR}/genimage-tmp
 
+    sed -i s:@IMAGE@:${IMAGE_BASENAME}.img:g ${WORKDIR}/genimage.config
+
     genimage \
         --config ${WORKDIR}/genimage.config \
         --tmppath ${WORKDIR}/genimage-tmp \
