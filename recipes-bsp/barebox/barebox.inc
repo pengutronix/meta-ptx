@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=057bf9e50e1ca857d0eb97bfe4ba8e5d"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-inherit kernel-arch
+inherit kernel-arch deploy
 inherit cml1
 
 DEPENDS = "libusb1-native"
@@ -57,15 +57,15 @@ do_compile () {
 BAREBOX_IMAGE_SUFFIX = ""
 
 do_deploy () {
-	install -d ${DEPLOY_DIR_IMAGE}
+	install -d ${DEPLOYDIR}
 	if [ -e ${S}/barebox-flash-image ]; then
-		install -m 644 -t ${DEPLOY_DIR_IMAGE}/ ${S}/barebox-flash-image
+		install -m 644 -t ${DEPLOYDIR}/ ${S}/barebox-flash-image
 	fi
 	for IMAGE in ${S}/images/*.img; do
 		if [ -e ${IMAGE} ]; then
 			BAREBOX_IMG_BASENAME=$(basename ${IMAGE} .img)${BAREBOX_IMAGE_SUFFIX}
-			install -m 644 -T ${IMAGE} ${DEPLOY_DIR_IMAGE}/${BAREBOX_IMG_BASENAME}-${DATETIME}.img
-			ln -sf ${BAREBOX_IMG_BASENAME}-${DATETIME}.img ${DEPLOY_DIR_IMAGE}/${BAREBOX_IMG_BASENAME}.img
+			install -m 644 -T ${IMAGE} ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}-${DATETIME}.img
+			ln -sf ${BAREBOX_IMG_BASENAME}-${DATETIME}.img ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}.img
 		fi
 	done
 }
