@@ -26,10 +26,11 @@ do_install_append () {
 		install -m 0644 ${WORKDIR}/system.conf ${D}${sysconfdir}/rauc/system.conf
 	fi
 
-	if [ -f ${WORKDIR}/openssl-ca/dev-ca.pem ]; then
-		install -d ${D}${sysconfdir}/rauc/openssl-ca
-		install -m 0644 ${WORKDIR}/openssl-ca/dev-ca.pem ${D}${sysconfdir}/rauc/openssl-ca/dev-ca.pem
-	fi
+	# Pem files
+	install -d ${D}${sysconfdir}/rauc/openssl-ca
+	for pem in `find ${WORKDIR} -name '*.pem'`; do \
+		install -m 0644 $pem ${D}${sysconfdir}/rauc/openssl-ca/; \
+	done
 
 	# D-bus service
 	install -d ${D}${sysconfdir}/dbus-1/system.d/
