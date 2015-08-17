@@ -10,6 +10,6 @@ SRC_URI = "http://www.pengutronix.de/software/genimage/download/genimage-${PV}.t
 
 EXTRA_OECONF = "--enable-largefile"
 
-inherit autotools gettext
+inherit pkgconfig autotools gettext
 
 BBCLASSEXTEND = "native"
