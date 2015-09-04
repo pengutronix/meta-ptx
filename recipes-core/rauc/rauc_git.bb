@@ -1,4 +1,4 @@
-include rauc.inc
+require rauc.inc
 PR = "r9"
 
 SRC_URI_append = " \ 
