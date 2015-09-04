@@ -23,6 +23,8 @@
 #   RAUC_KEY_FILE ?= "development-1.key.pem"
 #   RAUC_CERT_FILE ?= "development-1.cert.pem"
 
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
 RAUC_IMAGE_FSTYPE ?= "ext4"
 
 do_fetch[cleandirs] = "${S}"
