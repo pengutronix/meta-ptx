@@ -8,4 +8,4 @@ SRC_URI_append = " \
 PV = "0+git${SRCPV}"
 S = "${WORKDIR}/git"
 
-SRCREV = "7904e2e9d17fe0319bc46912e3531cf1b5ed4533"
+SRCREV = "c0a637ac4d1b65ff4a78fb4499415e5797fb5153"
