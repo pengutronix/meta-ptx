@@ -3,11 +3,12 @@ PACKAGES = ""
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
+S = "${WORKDIR}"
+
 INHIBIT_DEFAULT_DEPS = "1"
 
 do_unpack[nostamp] = "1"
 do_genimage[nostamp] = "1"
-do_genimage[cleandirs] += "${S}"
 do_genimage[depends] += "genimage-native:do_populate_sysroot mtd-utils-native:do_populate_sysroot"
 
 do_build[nostamp] = "1"
@@ -20,12 +21,14 @@ do_genimage () {
 
     sed -i s:@IMAGE@:${IMAGE_BASENAME}.img:g ${WORKDIR}/genimage.config
 
+    mkdir -p ${WORKDIR}/root
+
     genimage \
         --config ${WORKDIR}/genimage.config \
         --tmppath ${WORKDIR}/genimage-tmp \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${DEPLOY_DIR_IMAGE} \
-        --rootpath ${S}
+        --rootpath ${WORKDIR}/root
 }
 
 do_patch[noexec] = "1"
