@@ -14,6 +14,11 @@ FILES_${PN}_append = " /mnt/rauc"
 
 inherit autotools pkgconfig gettext systemd
 
+RAUC_KEYRING_FILE ??= "openssl-ca/dev-ca.pem"
+RAUC_KEYRING_FILE[doc] = "Path to keyring file to be placed in rauc images"
+
+SRC_URI += "file://${RAUC_KEYRING_FILE}"
+
 do_install_append () {
 	# Create rauc config dir
 	install -d ${D}${sysconfdir}/rauc
@@ -26,11 +31,13 @@ do_install_append () {
 		install -m 0644 ${WORKDIR}/system.conf ${D}${sysconfdir}/rauc/system.conf
 	fi
 
-	# Pem files
-	install -d ${D}${sysconfdir}/rauc/openssl-ca
-	for pem in `find ${WORKDIR} -name '*.pem'`; do \
-		install -m 0644 $pem ${D}${sysconfdir}/rauc/openssl-ca/; \
-	done
+	# CA file
+	if [ -f ${WORKDIR}/${RAUC_KEYRING_FILE} ]; then
+		install -d ${D}${sysconfdir}/rauc/openssl-ca
+		install -m 0644 ${WORKDIR}/${RAUC_KEYRING_FILE} ${D}${sysconfdir}/rauc/openssl-ca/; \
+	else
+		bbwarn "No keyring file provided"
+	fi
 
 	# D-bus service
 	install -d ${D}${sysconfdir}/dbus-1/system.d/
