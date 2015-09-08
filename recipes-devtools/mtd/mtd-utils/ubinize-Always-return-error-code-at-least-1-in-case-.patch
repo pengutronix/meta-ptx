@@ -1,0 +1,58 @@
+From ec5b0218e3112f27948238fbb6d1a97813be0d48 Mon Sep 17 00:00:00 2001
+From: Enrico Jorns <ejo@pengutronix.de>
+Date: Mon, 7 Sep 2015 15:29:11 +0200
+Subject: [PATCH] ubinize: Always return error code (at least -1) in case of an
+ error
+
+Signed-off-by: Enrico Jorns <ejo@pengutronix.de>
+---
+ ubi-utils/ubinize.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/ubi-utils/ubinize.c b/ubi-utils/ubinize.c
+index 34f465a..60bbd9a 100644
+--- a/ubi-utils/ubinize.c
++++ b/ubi-utils/ubinize.c
+@@ -519,6 +519,7 @@ int main(int argc, char * const argv[])
+ 	 */
+ 	seek = ui.peb_size * 2;
+ 	if (lseek(args.out_fd, seek, SEEK_SET) != seek) {
++		err = -1;
+ 		sys_errmsg("cannot seek file \"%s\"", args.f_out);
+ 		goto out_free;
+ 	}
+@@ -530,6 +531,7 @@ int main(int argc, char * const argv[])
+ 		int fd, j;
+ 
+ 		if (!sname) {
++			err = -1;
+ 			errmsg("ini-file parsing error (iniparser_getsecname)");
+ 			goto out_free;
+ 		}
+@@ -550,6 +552,7 @@ int main(int argc, char * const argv[])
+ 		 */
+ 		for (j = 0; j < i; j++) {
+ 			if (vi[i].id == vi[j].id) {
++				err = -1;
+ 				errmsg("volume IDs must be unique, but ID %d "
+ 				       "in section \"%s\" is not",
+ 				       vi[i].id, sname);
+@@ -557,6 +560,7 @@ int main(int argc, char * const argv[])
+ 			}
+ 
+ 			if (!strcmp(vi[i].name, vi[j].name)) {
++				err = -1;
+ 				errmsg("volume name must be unique, but name "
+ 				       "\"%s\" in section \"%s\" is not",
+ 				       vi[i].name, sname);
+@@ -580,6 +584,7 @@ int main(int argc, char * const argv[])
+ 		if (img) {
+ 			fd = open(img, O_RDONLY);
+ 			if (fd == -1) {
++				err = fd;
+ 				sys_errmsg("cannot open \"%s\"", img);
+ 				goto out_free;
+ 			}
+-- 
+2.5.0
+
