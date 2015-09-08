@@ -26,9 +26,11 @@ do_install_append () {
 	# Create rauc default mountpoint
 	install -d ${D}/mnt/rauc
 
-	# If a system.conf is provided in files, install it
+	# If a system.conf is provided in files, install it, otherwise warn
 	if [ -f ${WORKDIR}/system.conf ]; then
 		install -m 0644 ${WORKDIR}/system.conf ${D}${sysconfdir}/rauc/system.conf
+	else
+		bbwarn "No system.conf provided"
 	fi
 
 	# CA file
