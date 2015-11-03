@@ -15,13 +15,18 @@ do_build[nostamp] = "1"
 
 GENIMAGE_IMAGE_SUFFIX ?= "img"
 
+GENIMAGE_IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}-${DATETIME}"
+# Don't include the DATETIME variable in the sstate package sigantures
+GENIMAGE_IMAGE_NAME[vardepsexclude] = "DATETIME"
+GENIMAGE_IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${MACHINE}"
+
 do_genimage () {
     cd ${WORKDIR}
 
     rm -rf ${WORKDIR}/genimage-tmp
     mkdir -p ${WORKDIR}/genimage-tmp
 
-    sed -i s:@IMAGE@:${IMAGE_BASENAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
+    sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
     mkdir -p ${WORKDIR}/root
 
@@ -31,6 +36,10 @@ do_genimage () {
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${DEPLOY_DIR_IMAGE} \
         --rootpath ${WORKDIR}/root
+
+    if [ -e ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
+        ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
+    fi
 }
 
 do_patch[noexec] = "1"
