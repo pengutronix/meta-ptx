@@ -13,13 +13,15 @@ do_genimage[depends] += "genimage-native:do_populate_sysroot mtd-utils-native:do
 
 do_build[nostamp] = "1"
 
+GENIMAGE_IMAGE_SUFFIX ?= "img"
+
 do_genimage () {
     cd ${WORKDIR}
 
     rm -rf ${WORKDIR}/genimage-tmp
     mkdir -p ${WORKDIR}/genimage-tmp
 
-    sed -i s:@IMAGE@:${IMAGE_BASENAME}.img:g ${WORKDIR}/genimage.config
+    sed -i s:@IMAGE@:${IMAGE_BASENAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
     mkdir -p ${WORKDIR}/root
 
