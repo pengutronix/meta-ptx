@@ -1,0 +1,47 @@
+#!/bin/sh
+
+. /lib/init/rc-once.sh
+
+start() {
+	mount_root_rw || exit 1
+	if run_rc_once; then
+		rm -f /system-update
+	fi
+	systemctl daemon-reexec
+	sleep 1
+	touch /var/lib/systemd/clock
+	exec "$0" umount
+}
+
+umount() {
+	if ! mount_root_restore; then
+		# remounting rw/ro during the second boot will flush anything
+		# left in the filesystem journal
+		ln -sf /etc/rc.once.d /system-update
+		systemctl reboot
+	else
+		if [ -e /system-update ]; then
+			systemctl rescue
+		else
+			systemctl default
+		fi
+	fi
+}
+
+case "$1" in
+
+	start|"")
+		start
+		;;
+	umount)
+		umount
+		;;
+	*)
+		echo "Usage: $0 {start|umount}" >&2
+		exit 1
+		;;
+esac
+
+exit 0
+
+
