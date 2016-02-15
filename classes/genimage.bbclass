@@ -52,6 +52,7 @@ fakeroot do_genimage () {
     fi
 
     genimage \
+        --loglevel 2 \
         --config ${WORKDIR}/genimage.config \
         --tmppath ${WORKDIR}/genimage-tmp \
         --inputpath ${DEPLOY_DIR_IMAGE} \
