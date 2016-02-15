@@ -1,3 +1,13 @@
+# genimage.bbclas
+#
+# Class to generate disk images using genimage
+#
+# Variables for customization from image recipe:
+#
+# GENIMAGE_IMAGE_SUFFIX	- file extension suffix for created image (default: 'img')
+# GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
+# GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input toofs FSTYPE to use (default: 'tar.bz2')
+
 LICENSE = "MIT"
 PACKAGES = ""
 
@@ -20,7 +30,12 @@ GENIMAGE_IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}-${DATETIME}"
 GENIMAGE_IMAGE_NAME[vardepsexclude] = "DATETIME"
 GENIMAGE_IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${MACHINE}"
 
-do_genimage () {
+GENIMAGE_ROOTFS_IMAGE ?= ""
+GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
+
+do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_build' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
+
+fakeroot do_genimage () {
     cd ${WORKDIR}
 
     rm -rf ${WORKDIR}/genimage-tmp
@@ -28,7 +43,13 @@ do_genimage () {
 
     sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
+    rm -rf ${WORKDIR}/root
     mkdir -p ${WORKDIR}/root
+
+    # unpack input rootfs image if given
+    if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
+        tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${WORKDIR}/root
+    fi
 
     genimage \
         --config ${WORKDIR}/genimage.config \
