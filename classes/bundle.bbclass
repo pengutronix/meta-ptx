@@ -42,8 +42,8 @@ do_package_write_rpm[noexec] = "1"
 
 
 # Create dependency list from images
-do_fetch[depends] = "${@' '.join([d.getVar(image) + ":do_build" for image in \
-    ['RAUC_SLOT_' + slot for slot in d.getVar('RAUC_BUNDLE_SLOTS').split()]])}"
+do_fetch[depends] = "${@' '.join([d.getVar(image, True) + ":do_build" for image in \
+    ['RAUC_SLOT_' + slot for slot in d.getVar('RAUC_BUNDLE_SLOTS', True).split()]])}"
 
 S = "${WORKDIR}"
 
@@ -71,7 +71,7 @@ python do_fetch() {
     manifest.write('version=${RAUC_BUNDLE_VERSION}\n')
     manifest.write('\n')
 
-    for slot in d.getVar('RAUC_BUNDLE_SLOTS').split():
+    for slot in d.getVar('RAUC_BUNDLE_SLOTS', True).split():
         manifest.write('[image.%s]\n' % slot)
         slotflags = d.getVarFlags('RAUC_SLOT_%s' % slot)
         if slotflags and 'type' in slotflags:
@@ -80,7 +80,7 @@ python do_fetch() {
             imgtype = 'image'
 
         if imgtype == 'image':
-            imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot), "${MACHINE}", "${RAUC_IMAGE_FSTYPE}")
+            imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), "${MACHINE}", "${RAUC_IMAGE_FSTYPE}")
         elif imgtype == 'kernel':
             # TODO: Add image type support
             imgname = "%s-%s.bin" % ("zImage", "${MACHINE}")
