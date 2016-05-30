@@ -15,7 +15,7 @@ python () {
     option = ""
 
     for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
-        option = d.getVar('BOOTSPEC_OPTIONS_%s' % type)
+        option = d.getVar('BOOTSPEC_OPTIONS_%s' % type, True)
 	if option:
 	    break;
 
