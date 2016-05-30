@@ -9,6 +9,9 @@ BOOTSPEC_FILENAME[doc] = "Name of the created boot spec entry file"
 BOOTSPEC_OPTIONS_ext4 = "rootfstype=ext4 rootwait"
 BOOTSPEC_OPTIONS_ubi = "rootfstype=ubifs"
 
+BOOTSPEC_VERSION ?= "1.0"
+BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
+
 BOOTSPEC_OPTIONS_DEFAULT = ""
 
 python () {
@@ -37,7 +40,7 @@ python create_bootspec() {
         raise bb.build.FuncFailed('Unable to open boot spec file for writing')
 
     bootspecfile.write('title      ${BOOTSPEC_TITLE} boot spec entry\n')
-    bootspecfile.write('version    1.0\n')
+    bootspecfile.write('version    ${BOOTSPEC_VERSION}\n')
     bootspecfile.write('options    ${BOOTSPEC_OPTIONS}\n')
     bootspecfile.write('linux      /boot/${KERNEL_IMAGETYPE}\n')
     bootspecfile.write('devicetree /boot/devicetree-${KERNEL_IMAGETYPE}-${KERNEL_DEVICETREE}\n')
