@@ -28,6 +28,9 @@ python () {
 BOOTSPEC_OPTIONS ?= "${BOOTSPEC_OPTIONS_DEFAULT}"
 BOOTSPEC_OPTIONS[doc] = "Content of the boot spec entry 'options' line"
 
+BOOTSPEC_EXTRALINE ?= ""
+BOOTSPEC_OPTIONS[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
+
 python create_bootspec() {
 
     bb.note("Creating boot spec entry /loader/entries/${BOOTSPEC_FILENAME} ...")
@@ -42,6 +45,7 @@ python create_bootspec() {
     bootspecfile.write('title      ${BOOTSPEC_TITLE} boot spec entry\n')
     bootspecfile.write('version    ${BOOTSPEC_VERSION}\n')
     bootspecfile.write('options    ${BOOTSPEC_OPTIONS}\n')
+    bootspecfile.write('${BOOTSPEC_EXTRALINE}')
     bootspecfile.write('linux      /boot/${KERNEL_IMAGETYPE}\n')
     bootspecfile.write('devicetree /boot/devicetree-${KERNEL_IMAGETYPE}-${KERNEL_DEVICETREE}\n')
 
