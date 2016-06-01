@@ -60,15 +60,18 @@ DEPENDS = "rauc-native"
 python do_fetch() {
     import shutil
 
-    bb.utils.mkdirhier("${S}/bundle")
+    machine = d.getVar('MACHINE', True)
+    img_fstype = d.getVar('RAUC_IMAGE_FSTYPE', True)
+
+    bb.utils.mkdirhier(d.expand("${S}/bundle"))
     try:
-        manifest = open("${S}/bundle/manifest.raucm", 'w')
+        manifest = open(d.expand("${S}/bundle/manifest.raucm"), 'w')
     except OSError:
         raise bb.build.FuncFailed('Unable to open manifest.raucm')
 
     manifest.write('[update]\n')
-    manifest.write('compatible=${RAUC_BUNDLE_COMPATIBLE}\n')
-    manifest.write('version=${RAUC_BUNDLE_VERSION}\n')
+    manifest.write(d.expand('compatible=${RAUC_BUNDLE_COMPATIBLE}\n'))
+    manifest.write(d.expand('version=${RAUC_BUNDLE_VERSION}\n'))
     manifest.write('\n')
 
     for slot in d.getVar('RAUC_BUNDLE_SLOTS', True).split():
@@ -80,10 +83,10 @@ python do_fetch() {
             imgtype = 'image'
 
         if imgtype == 'image':
-            imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), "${MACHINE}", "${RAUC_IMAGE_FSTYPE}")
+            imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), machine, img_fstype)
         elif imgtype == 'kernel':
             # TODO: Add image type support
-            imgname = "%s-%s.bin" % ("zImage", "${MACHINE}")
+            imgname = "%s-%s.bin" % ("zImage", machine)
         elif imgtype == 'boot':
             # TODO: adapt if barebox produces determinable output images
             imgname = "%s" % ("barebox.img")
@@ -95,10 +98,10 @@ python do_fetch() {
         manifest.write("\n")
 
         # Set or update symlinks to image files
-        if os.path.lexists("${S}/bundle/%s" % imgname):
-            bb.utils.remove("${S}/bundle/%s" % imgname)
-        shutil.copy("${DEPLOY_DIR_IMAGE}/%s" % imgname, "${S}/bundle/%s" % imgname)
-        if not os.path.exists("${S}/bundle/%s" % imgname):
+        if os.path.lexists(d.expand("${S}/bundle/%s") % (imgname)):
+            bb.utils.remove(d.expand("${S}/bundle/%s") % (imgname))
+        shutil.copy(d.expand("${DEPLOY_DIR_IMAGE}/%s") % imgname, d.expand("${S}/bundle/%s") % (imgname))
+        if not os.path.exists(d.expand("${S}/bundle/%s") % (imgname)):
             raise bb.build.FuncFailed('Failed creating symlink to %s' % imgname)
 
     manifest.close()
