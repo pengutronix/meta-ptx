@@ -62,10 +62,11 @@ python do_fetch() {
 
     machine = d.getVar('MACHINE', True)
     img_fstype = d.getVar('RAUC_IMAGE_FSTYPE', True)
+    bundle_path = d.expand("${S}/bundle")
 
-    bb.utils.mkdirhier(d.expand("${S}/bundle"))
+    bb.utils.mkdirhier(bundle_path)
     try:
-        manifest = open(d.expand("${S}/bundle/manifest.raucm"), 'w')
+        manifest = open('%s/manifest.raucm' % bundle_path, 'w')
     except OSError:
         raise bb.build.FuncFailed('Unable to open manifest.raucm')
 
@@ -97,11 +98,12 @@ python do_fetch() {
         manifest.write("filename=%s\n" % imgname)
         manifest.write("\n")
 
+        bundle_imgpath = "%s/%s" % (bundle_path, imgname)
         # Set or update symlinks to image files
-        if os.path.lexists(d.expand("${S}/bundle/%s") % (imgname)):
-            bb.utils.remove(d.expand("${S}/bundle/%s") % (imgname))
-        shutil.copy(d.expand("${DEPLOY_DIR_IMAGE}/%s") % imgname, d.expand("${S}/bundle/%s") % (imgname))
-        if not os.path.exists(d.expand("${S}/bundle/%s") % (imgname)):
+        if os.path.lexists(bundle_imgpath):
+            bb.utils.remove(bundle_imgpath)
+        shutil.copy(d.expand("${DEPLOY_DIR_IMAGE}/%s") % imgname, bundle_imgpath)
+        if not os.path.exists(bundle_imgpath):
             raise bb.build.FuncFailed('Failed creating symlink to %s' % imgname)
 
     manifest.close()
