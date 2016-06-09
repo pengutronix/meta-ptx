@@ -42,7 +42,7 @@ python create_bootspec() {
         bootspecfile.write('title      %s\n' % d.getVar('BOOTSPEC_TITLE', True))
         bootspecfile.write('version    %s\n' % d.getVar('BOOTSPEC_VERSION', True))
         bootspecfile.write('options    %s\n' % d.expand('${BOOTSPEC_OPTIONS}'))
-        bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE', True))
+        bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE', True).replace(r'\n', '\n'))
         bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}'))
         bootspecfile.write('devicetree %s\n' % d.expand('/boot/devicetree-${KERNEL_IMAGETYPE}-' + x + '.dtb\n'))
 
