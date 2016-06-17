@@ -7,10 +7,11 @@ PR = "r0"
 SRC_URI = "git://git.pengutronix.de/git/tools/dt-utils.git \
 	file://0001-remove-init-option-use-default-if-load-failed.patch "
 
-PACKAGES =+ "libdt-utils barebox-fdtdump"
+PACKAGES =+ "libdt-utils barebox-fdtdump barebox-dtblint"
 
 FILES_libdt-utils = "${libdir}/libdt-utils.so.*"
 FILES_barebox-fdtdump = "${bindir}/fdtdump"
+FILES_barebox-dtblint = "${bindir}/dtblint"
 
 S = "${WORKDIR}/git"
 
