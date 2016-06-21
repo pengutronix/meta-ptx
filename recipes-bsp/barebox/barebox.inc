@@ -63,6 +63,7 @@ do_compile () {
 # Suffix that allows to create different barebox images in one BSP
 BAREBOX_IMAGE_SUFFIX = ""
 
+do_deploy[vardepsexclude] = "DATETIME"
 do_deploy () {
 	install -d ${DEPLOYDIR}
 	if [ -e ${S}/barebox-flash-image ]; then
