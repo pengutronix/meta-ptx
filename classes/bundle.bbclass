@@ -10,6 +10,7 @@
 #   RAUC_BUNDLE_SLOTS ?= "rootfs kernel bootloader"
 #   
 #   RAUC_SLOT_rootfs ?= "core-image-minimal"
+#   RAUC_SLOT_rootfs[fstype] = "ext4"
 #   
 #   RAUC_SLOT_kernel ?= "linux-yocto"
 #   RAUC_SLOT_kernel[type] ?= "kernel"
@@ -82,6 +83,9 @@ python do_fetch() {
             imgtype = slotflags.get('type')
         else:
             imgtype = 'image'
+
+        if slotflags and 'fstype' in slotflags:
+            img_fstype = slotflags.get('fstype')
 
         if imgtype == 'image':
             imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), machine, img_fstype)
