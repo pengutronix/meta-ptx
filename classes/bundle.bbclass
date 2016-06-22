@@ -88,13 +88,16 @@ python do_fetch() {
             img_fstype = slotflags.get('fstype')
 
         if imgtype == 'image':
-            imgname = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), machine, img_fstype)
+            imgsource = "%s-%s.%s" % (d.getVar('RAUC_SLOT_%s' % slot, True), machine, img_fstype)
+            imgname = imgsource
         elif imgtype == 'kernel':
             # TODO: Add image type support
-            imgname = "%s-%s.bin" % ("zImage", machine)
+            imgsource = "%s-%s.bin" % ("zImage", machine)
+            imgname = "%s.%s" % (imgsource, "img")
         elif imgtype == 'boot':
             # TODO: adapt if barebox produces determinable output images
-            imgname = "%s" % ("barebox.img")
+            imgsource = "%s" % ("barebox.img")
+            imgname = imgsource
         else:
             raise bb.build.FuncFailed('Unknown image type: %s' % imgtype)
 
@@ -106,7 +109,7 @@ python do_fetch() {
         # Set or update symlinks to image files
         if os.path.lexists(bundle_imgpath):
             bb.utils.remove(bundle_imgpath)
-        shutil.copy(d.expand("${DEPLOY_DIR_IMAGE}/%s") % imgname, bundle_imgpath)
+        shutil.copy(d.expand("${DEPLOY_DIR_IMAGE}/%s") % imgsource, bundle_imgpath)
         if not os.path.exists(bundle_imgpath):
             raise bb.build.FuncFailed('Failed creating symlink to %s' % imgname)
 
