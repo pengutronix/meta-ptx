@@ -7,7 +7,7 @@
 #   RAUC_BUNDLE_COMPATIBLE ?= "My Super Product"
 #   RAUC_BUNDLE_VERSION ?= "v2015-06-07-1"
 #   
-#   RAUC_BUNDLE_SLOTS ?= "rootfs kernel bootloader"
+#   RAUC_BUNDLE_SLOTS ?= "rootfs kernel dtb bootloader"
 #   
 #   RAUC_SLOT_rootfs ?= "core-image-minimal"
 #   RAUC_SLOT_rootfs[fstype] = "ext4"
@@ -17,6 +17,10 @@
 #   
 #   RAUC_SLOT_bootloader ?= "barebox"
 #   RAUC_SLOT_bootloader[type] ?= "boot"
+#
+#   RAUC_SLOT_dtb ?= linux-yocto
+#   RAUC_SLOT_dtb[type] ?= "file"
+#   RAUC_SLOT_dtb[file] ?= "am335x-bone.dtb"
 #
 #
 # Additionally you need to provide a certificate and a key file
@@ -98,6 +102,12 @@ python do_fetch() {
             # TODO: adapt if barebox produces determinable output images
             imgsource = "%s" % ("barebox.img")
             imgname = imgsource
+        elif imgtype == 'file':
+            if slotflags and 'file' in slotflags:
+                imgsource = "%s" % slotflags.get('file')
+            else:
+                raise bb.build.FuncFailed('Unknown file for slot: %s' % slot)
+            imgname = "%s.%s" % (imgsource, "img")
         else:
             raise bb.build.FuncFailed('Unknown image type: %s' % imgtype)
 
