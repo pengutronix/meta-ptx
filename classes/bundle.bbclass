@@ -92,7 +92,7 @@ python do_fetch() {
             # TODO: adapt if barebox produces determinable output images
             imgname = "%s" % ("barebox.img")
         else:
-            raise bb.build.FuncFailed('Unknown image type: %s', imgtype)
+            raise bb.build.FuncFailed('Unknown image type: %s' % imgtype)
 
         print imgname
         manifest.write("filename=%s\n" % imgname)
