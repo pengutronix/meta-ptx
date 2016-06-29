@@ -7,8 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 
 DEPENDS = "squashfs-tools-native curl openssl glib-2.0"
-RDEPENDS_${PN} = "barebox-state"
-RDEPENDS_${PN}_class-native = ""
+RDEPENDS_${PN}_class-target = "barebox-state"
 
 FILES_${PN}_append = " /mnt/rauc"
 
@@ -19,7 +18,8 @@ RAUC_KEYRING_FILE[doc] = "Path to keyring file to be placed in rauc images"
 
 SRC_URI += "file://${RAUC_KEYRING_FILE}"
 
-do_install_append () {
+do_install_append_class-target () {
+
 	# Create rauc config dir
 	install -d ${D}${sysconfdir}/rauc
 
@@ -72,4 +72,4 @@ SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "rauc.service rauc-mark-good.service"
 SYSTEMD_AUTO_ENABLE_${PN} = "enable"
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
