@@ -6,8 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 
-DEPENDS = "squashfs-tools-native curl openssl glib-2.0"
+DEPENDS = "curl openssl glib-2.0"
 RDEPENDS_${PN}_class-target = "barebox-state"
+RRECOMMENDS_${PN} = "squashfs-tools"
 
 FILES_${PN}_append = " /mnt/rauc"
 
