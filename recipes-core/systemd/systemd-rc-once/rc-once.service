@@ -1,6 +1,7 @@
 [Unit]
 Description=First boot services
 DefaultDependencies=no
+IgnoreOnIsolate=true
 After=local-fs.target
 Requires=local-fs.target
 After=system-update.target
