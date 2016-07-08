@@ -65,24 +65,9 @@ do_install_append_class-target () {
 
 }
 
-inherit deploy
-do_deploy[sstate-outputdirs] = "${DEPLOY_DIR_TOOLS}"
-
-do_deploy() {
-}
-
-do_deploy_append_class-native() {
-    install -d ${DEPLOY_DIR_TOOLS}
-    install -m 0755 ${B}/rauc ${DEPLOY_DIR_TOOLS}/rauc-${PV}
-    rm -f ${DEPLOY_DIR_TOOLS}/rauc
-    ln -sf ./rauc-${PV} ${DEPLOY_DIR_TOOLS}/rauc
-}
-
-addtask deploy before do_package after do_install
-
 SYSTEMD_PACKAGES = "${PN}-service ${PN}-mark-good"
 SYSTEMD_SERVICE_${PN}-service = "rauc.service"
 SYSTEMD_SERVICE_${PN}-mark-good = "rauc-mark-good.service"
 SYSTEMD_AUTO_ENABLE_${PN} = "enable"
 
-BBCLASSEXTEND = "native nativesdk"
+BBCLASSEXTEND = "nativesdk"
