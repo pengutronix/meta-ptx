@@ -19,6 +19,8 @@ FILES_${PN}-service += "${systemd_unitdir}/system/rauc.service"
 FILES_${PN}-mark-good = "${systemd_unitdir}/system/rauc-mark-good.service"
 
 PACKAGECONFIG ??= "service"
+PACKAGECONFIG_class-native = ""
+PACKAGECONFIG_class-nativesdk = ""
 PACKAGECONFIG[service] = "--enable-service,--enable-service=no,,${PN}-service"
 
 inherit autotools pkgconfig gettext systemd
