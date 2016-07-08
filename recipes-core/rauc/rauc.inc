@@ -9,9 +9,17 @@ SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 DEPENDS = "curl openssl glib-2.0"
 RDEPENDS_${PN}_class-target = "barebox-state"
 RRECOMMENDS_${PN} = "squashfs-tools"
-RRECOMMENDS_${PN}_class-target = "mtd-utils"
+RRECOMMENDS_${PN}_class-target = "mtd-utils ${PN}-mark-good"
+
+PACKAGES =+ "${PN}-service ${PN}-mark-good"
 
 FILES_${PN}_append = " /mnt/rauc"
+FILES_${PN}-service = "${sysconfdir}/dbus-1/system.d/de.pengutronix.rauc.conf"
+FILES_${PN}-service += "${systemd_unitdir}/system/rauc.service"
+FILES_${PN}-mark-good = "${systemd_unitdir}/system/rauc-mark-good.service"
+
+PACKAGECONFIG ??= "service"
+PACKAGECONFIG[service] = "--enable-service,--enable-service=no,,${PN}-service"
 
 inherit autotools pkgconfig gettext systemd
 
@@ -70,8 +78,9 @@ do_deploy_append_class-native() {
 
 addtask deploy before do_package after do_install
 
-SYSTEMD_PACKAGES = "${PN}"
-SYSTEMD_SERVICE_${PN} = "rauc.service rauc-mark-good.service"
+SYSTEMD_PACKAGES = "${PN}-service ${PN}-mark-good"
+SYSTEMD_SERVICE_${PN}-service = "rauc.service"
+SYSTEMD_SERVICE_${PN}-mark-good = "rauc-mark-good.service"
 SYSTEMD_AUTO_ENABLE_${PN} = "enable"
 
 BBCLASSEXTEND = "native nativesdk"
