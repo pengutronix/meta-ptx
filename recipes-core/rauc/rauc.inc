@@ -9,7 +9,7 @@ SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 DEPENDS = "curl openssl glib-2.0"
 RDEPENDS_${PN}_class-target = "barebox-state"
 RRECOMMENDS_${PN} = "squashfs-tools"
-RRECOMMENDS_${PN}_class-target = "mtd-utils ${PN}-mark-good"
+RRECOMMENDS_${PN}_append_class-target = " mtd-utils ${PN}-mark-good"
 
 PACKAGES =+ "${PN}-service ${PN}-mark-good"
 
