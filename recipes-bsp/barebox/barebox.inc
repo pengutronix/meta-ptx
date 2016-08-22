@@ -13,6 +13,9 @@ inherit cml1
 
 DEPENDS = "libusb1-native lzop-native"
 
+PACKAGES += "${PN}-bareboxenv ${PN}-bareboxcrc32 ${PN}-kernel-install \
+         ${PN}-bareboximd"
+
 SRC_URI = "http://barebox.org/download/barebox-${PV}.tar.bz2"
 
 S = "${WORKDIR}/barebox-${PV}"
@@ -56,6 +59,22 @@ do_compile () {
 	oe_runmake
 }
 
+do_install() {
+	install -d ${D}${bindir}
+	if grep "CONFIG_BAREBOXENV_TARGET=y" ${B}/.config; then
+		install -m 0755 ${B}/scripts/bareboxenv-target ${D}${bindir}/bareboxenv
+	fi
+	if grep "CONFIG_BAREBOXCRC32_TARGET=y" ${B}/.config; then
+		install -m 0755 ${B}/scripts/bareboxcrc32-target ${D}${bindir}/bareboxcrc32
+	fi
+	if grep "CONFIG_KERNEL_INSTALL_TARGET=y" ${B}/.config; then
+		install -m 0755 ${B}/scripts/kernel-install-target ${D}${bindir}/kernel-install
+	fi
+	if grep "CONFIG_IMD_TARGET=y" ${B}/.config; then
+		install -m 0755 ${B}/scripts/bareboximd-target ${D}${bindir}/bareboximd
+	fi
+}
+
 # Suffix that allows to create different barebox images in one BSP
 BAREBOX_IMAGE_SUFFIX = ""
 
@@ -73,5 +92,11 @@ do_deploy () {
 		fi
 	done
 }
+
+FILES_${PN} = ""
+FILES_${PN}-bareboxenv = "${bindir}/bareboxenv"
+FILES_${PN}-bareboxcrc32 = "${bindir}/bareboxcrc32"
+FILES_${PN}-kernel-install = "${bindir}/kernel-install"
+FILES_${PN}-bareboximd = "${bindir}/bareboximd"
 
 addtask deploy before do_build after do_compile
