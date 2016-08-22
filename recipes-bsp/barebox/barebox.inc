@@ -21,19 +21,14 @@ COMPATIBLE_MACHINE = "none"
 
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
-do_configure_prepend() {
+do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
 		cp ${WORKDIR}/defconfig ${S}/.config
 	else
 		bbwarn "No defconfig given"
 	fi
 
-	# do not compile tools when using KERNEL_CC/KERNEL_LD
-	echo CONFIG_BAREBOXENV_TARGET=n >> ${S}/.config
-	echo CONFIG_BAREBOXCRC32_TARGET=n >> ${S}/.config
-	echo CONFIG_KERNEL_INSTALL_TARGET=n >> ${S}/.config
-	echo CONFIG_IMD_TARGET=n >> ${S}/.config
-	oe_runmake oldconfig
+	cml1_do_configure
 }
 
 do_compile () {
@@ -51,13 +46,14 @@ do_compile () {
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
 
+	export TARGETCFLAGS="${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 	unset LDFLAGS
 	unset CFLAGS
 	unset CPPFLAGS
 	unset CXXFLAGS
 	unset MACHINE
 
-	oe_runmake CC="${KERNEL_CC}" LD="${KERNEL_LD}"
+	oe_runmake
 }
 
 # Suffix that allows to create different barebox images in one BSP
