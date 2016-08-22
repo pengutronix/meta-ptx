@@ -4,13 +4,9 @@ SECTION = "base"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=9ac2e7cff1ddaf48b6eab6028f23ef88"
 DEPENDS = "udev"
-SRCREV = "b1a52928e7bf4126bbe014ee434bd91c4f804bba"
 PR = "r0"
 
-SRC_URI = "git://git.pengutronix.de/git/tools/dt-utils.git \
-        file://0001-remove-init-option-use-default-if-load-failed.patch "
-
-S = "${WORKDIR}/git"
+SRC_URI = "http://www.pengutronix.de/software/dt-utils/download/${PN}-${PV}.tar.xz"
 
 inherit autotools pkgconfig gettext
 
