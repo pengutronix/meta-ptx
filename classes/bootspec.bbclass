@@ -1,6 +1,6 @@
 # Adds boot spec entry for first FSTYPE found
 
-BOOTSPEC_TITLE ?= "${SUMMARY} - boot spec entry"
+BOOTSPEC_TITLE ?= "${SUMMARY}"
 BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
 
 BOOTSPEC_OPTIONS_ext4 = "rootfstype=ext4 rootwait"
