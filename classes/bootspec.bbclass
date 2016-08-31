@@ -8,6 +8,9 @@ BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
 
 BOOTSPEC_OPTIONS_ext4 = "rootfstype=ext4 rootwait"
 BOOTSPEC_OPTIONS_ubi = "rootfstype=ubifs"
+BOOTSPEC_OPTIONS_squashfs = "rootfstype=squashfs"
+BOOTSPEC_OPTIONS_squashfs-lzo = "rootfstype=squashfs"
+BOOTSPEC_OPTIONS_squashfs-xz = "rootfstype=squashfs"
 
 BOOTSPEC_VERSION ?= "${KERNEL_VERSION}"
 BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
