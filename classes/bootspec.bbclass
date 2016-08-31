@@ -1,4 +1,7 @@
 # Adds boot spec entry for first FSTYPE found
+inherit linux-kernel-base
+
+KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 
 BOOTSPEC_TITLE ?= "${SUMMARY}"
 BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
@@ -6,7 +9,7 @@ BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
 BOOTSPEC_OPTIONS_ext4 = "rootfstype=ext4 rootwait"
 BOOTSPEC_OPTIONS_ubi = "rootfstype=ubifs"
 
-BOOTSPEC_VERSION ?= "1.0"
+BOOTSPEC_VERSION ?= "${KERNEL_VERSION}"
 BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
 
 BOOTSPEC_OPTIONS_DEFAULT = ""
