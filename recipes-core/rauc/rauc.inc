@@ -14,8 +14,11 @@ RRECOMMENDS_${PN}_append_class-target = " mtd-utils ${PN}-mark-good"
 PACKAGES =+ "${PN}-service ${PN}-mark-good"
 
 FILES_${PN}_append = " /mnt/rauc"
-FILES_${PN}-service = "${sysconfdir}/dbus-1/system.d/de.pengutronix.rauc.conf"
-FILES_${PN}-service += "${systemd_unitdir}/system/rauc.service"
+FILES_${PN}-service = "\
+  ${systemd_unitdir}/system/rauc.service \
+  ${datadir}/dbus-1/system.d/de.pengutronix.rauc.conf \
+  ${datadir}/dbus-1/system-services/de.pengutronix.rauc.service \
+  "
 FILES_${PN}-mark-good = "${systemd_unitdir}/system/rauc-mark-good.service"
 
 PACKAGECONFIG ??= "service network json"
@@ -55,13 +58,7 @@ do_install_append_class-target () {
 		bbwarn "No keyring file provided"
 	fi
 
-	# D-bus service
-	install -d ${D}${sysconfdir}/dbus-1/system.d/
-	install -m 0644 ${S}/data/de.pengutronix.rauc.conf ${D}${sysconfdir}/dbus-1/system.d/
-
-	# Systemd service
-	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/rauc.service ${D}${systemd_unitdir}/system/
+	install -d ${D}${systemd_unitdir}/system/
 	install -m 0644 ${WORKDIR}/rauc-mark-good.service ${D}${systemd_unitdir}/system/
 	sed -i -e 's!@BINDIR@!${bindir}!g' ${D}${systemd_unitdir}/system/*.service
 
