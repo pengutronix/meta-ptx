@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "file://rauc.service file://rauc-mark-good.service "
 
-DEPENDS = "curl openssl glib-2.0"
+DEPENDS = "openssl glib-2.0"
 RDEPENDS_${PN}_class-target = "barebox-state"
 RRECOMMENDS_${PN} = "squashfs-tools"
 RRECOMMENDS_${PN}_append_class-target = " mtd-utils ${PN}-mark-good"
@@ -18,10 +18,12 @@ FILES_${PN}-service = "${sysconfdir}/dbus-1/system.d/de.pengutronix.rauc.conf"
 FILES_${PN}-service += "${systemd_unitdir}/system/rauc.service"
 FILES_${PN}-mark-good = "${systemd_unitdir}/system/rauc-mark-good.service"
 
-PACKAGECONFIG ??= "service"
+PACKAGECONFIG ??= "service network json"
 PACKAGECONFIG_class-native = ""
 PACKAGECONFIG_class-nativesdk = ""
 PACKAGECONFIG[service] = "--enable-service,--enable-service=no,,${PN}-service"
+PACKAGECONFIG[network] = "--enable-network,--enable-network=no,curl"
+PACKAGECONFIG[json]    = "--enable-json,--enable-json=no,json-glib"
 
 inherit autotools pkgconfig gettext systemd
 
