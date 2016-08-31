@@ -13,7 +13,6 @@ RRECOMMENDS_${PN}_append_class-target = " mtd-utils ${PN}-mark-good"
 
 PACKAGES =+ "${PN}-service ${PN}-mark-good"
 
-FILES_${PN}_append = " /mnt/rauc"
 FILES_${PN}-service = "\
   ${systemd_unitdir}/system/rauc.service \
   ${datadir}/dbus-1/system.d/de.pengutronix.rauc.conf \
@@ -39,9 +38,6 @@ do_install_append_class-target () {
 
 	# Create rauc config dir
 	install -d ${D}${sysconfdir}/rauc
-
-	# Create rauc default mountpoint
-	install -d ${D}/mnt/rauc
 
 	# If a system.conf is provided in files, install it, otherwise warn
 	if [ -f ${WORKDIR}/system.conf ]; then
