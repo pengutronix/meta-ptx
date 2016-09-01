@@ -45,6 +45,8 @@ do_package_write_ipk[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_package_write_rpm[noexec] = "1"
 
+RAUC_BUNDLE_COMPATIBLE  ??= "${MACHINE}-${TARGET_VENDOR}"
+RAUC_BUNDLE_VERSION     ??= "${PV}"
 
 # Create dependency list from images
 do_fetch[depends] = "${@' '.join([d.getVar(image, True) + ":do_build" for image in \
