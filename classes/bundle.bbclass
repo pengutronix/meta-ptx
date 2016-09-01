@@ -47,6 +47,9 @@ do_package_write_rpm[noexec] = "1"
 
 RAUC_BUNDLE_COMPATIBLE  ??= "${MACHINE}-${TARGET_VENDOR}"
 RAUC_BUNDLE_VERSION     ??= "${PV}"
+RAUC_BUNDLE_DESCRIPTION ??= "${SUMMARY}"
+RAUC_BUNDLE_BUILD       ??= "${DATETIME}"
+RAUC_BUNDLE_BUILD[vardepsexclude] = "DATETIME"
 
 # Create dependency list from images
 do_fetch[depends] = "${@' '.join([d.getVar(image, True) + ":do_build" for image in \
@@ -80,6 +83,8 @@ python do_fetch() {
     manifest.write('[update]\n')
     manifest.write(d.expand('compatible=${RAUC_BUNDLE_COMPATIBLE}\n'))
     manifest.write(d.expand('version=${RAUC_BUNDLE_VERSION}\n'))
+    manifest.write(d.expand('description=${RAUC_BUNDLE_DESCRIPTION}\n'))
+    manifest.write(d.expand('build=${RAUC_BUNDLE_BUILD}\n'))
     manifest.write('\n')
 
     for slot in d.getVar('RAUC_BUNDLE_SLOTS', True).split():
