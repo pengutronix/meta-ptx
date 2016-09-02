@@ -4,7 +4,7 @@ LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 
-SRC_URI = "file://rauc.service file://rauc-mark-good.service "
+SRC_URI = "file://rauc-mark-good.service "
 
 DEPENDS = "openssl glib-2.0"
 RDEPENDS_${PN}_class-target = "barebox-state"
