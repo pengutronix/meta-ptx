@@ -7,10 +7,14 @@
 #   RAUC_BUNDLE_COMPATIBLE ?= "My Super Product"
 #   RAUC_BUNDLE_VERSION ?= "v2015-06-07-1"
 #   
+#   RAUC_BUNDLE_HOOKS[file] ?= "hook.sh"
+#   RAUC_BUNDLE_HOOKS[hooks] ?= "install-check"
+#
 #   RAUC_BUNDLE_SLOTS ?= "rootfs kernel dtb bootloader"
 #   
 #   RAUC_SLOT_rootfs ?= "core-image-minimal"
 #   RAUC_SLOT_rootfs[fstype] = "ext4"
+#   RAUC_SLOT_rootfs[hooks] ?= "install;post-install"
 #   
 #   RAUC_SLOT_kernel ?= "linux-yocto"
 #   RAUC_SLOT_kernel[type] ?= "kernel"
@@ -87,6 +91,14 @@ python do_fetch() {
     manifest.write(d.expand('build=${RAUC_BUNDLE_BUILD}\n'))
     manifest.write('\n')
 
+    hooksflags = d.getVarFlags('RAUC_BUNDLE_HOOKS')
+    if hooksflags and 'file' in hooksflags:
+        manifest.write('[hooks]\n')
+        manifest.write("filename=%s\n" % hooksflags.get('file'))
+        if 'hooks' in hooksflags:
+            manifest.write("hooks=%s\n" % hooksflags.get('hooks'))
+        manifest.write('\n')
+
     for slot in d.getVar('RAUC_BUNDLE_SLOTS', True).split():
         manifest.write('[image.%s]\n' % slot)
         slotflags = d.getVarFlags('RAUC_SLOT_%s' % slot)
@@ -120,6 +132,8 @@ python do_fetch() {
 
         print imgname
         manifest.write("filename=%s\n" % imgname)
+        if slotflags and 'hooks' in slotflags:
+            manifest.write("hooks=%s\n" % slotflags.get('hooks'))
         manifest.write("\n")
 
         bundle_imgpath = "%s/%s" % (bundle_path, imgname)
@@ -131,6 +145,15 @@ python do_fetch() {
             raise bb.build.FuncFailed('Failed creating symlink to %s' % imgname)
 
     manifest.close()
+}
+
+do_unpack_append() {
+    import shutil
+
+    hooksflags = d.getVarFlags('RAUC_BUNDLE_HOOKS')
+    if hooksflags and 'file' in hooksflags:
+        hf = hooksflags.get('file')
+        shutil.copy(d.expand("${WORKDIR}/%s" % hf), d.expand("${S}/bundle/%s" % hf))
 }
 
 DEPLOY_DIR_BUNDLE ?= "${DEPLOY_DIR_IMAGE}/bundles"
