@@ -34,6 +34,12 @@ RAUC_KEYRING_FILE[doc] = "Path to keyring file to be placed in rauc images"
 
 SRC_URI += "file://${RAUC_KEYRING_FILE}"
 
+EXTRA_OECONF += "\
+	--with-systemdunitdir=${systemd_system_unitdir} \
+	--with-dbuspolicydir=${datadir}/dbus-1/system.d \
+	--with-dbussystemservicedir=${datadir}/dbus-1/system-services \
+	"
+
 do_install_append_class-target () {
 
 	# Create rauc config dir
