@@ -2,7 +2,7 @@ SUMMARY = "Image generation tool"
 
 SECTION = "base"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://genimage.c;beginline=1;endline=16;md5=89d7f9ff68e4a08b3e2ec01729a3949f"
+LIC_FILES_CHKSUM = "file://genimage.c;beginline=1;endline=15;md5=bd66ae8b32d8a336e09c1d4a9924a49f"
 
 DEPENDS = "confuse dosfstools"
 
