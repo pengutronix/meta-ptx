@@ -1,12 +1,65 @@
 # genimage.bbclas
 #
-# Class to generate disk images using genimage
+# Class to generate disk images using the `genimage` tool.
 #
-# Variables for customization from image recipe:
+# In order to build an image, your recipe must inherit the genimage class and
+# have # a valid genimage configuration file in SRC_URI, named
+# `genimage.config`.
+#
+#   inherit genimage
+#
+#   SRC_URI += "file://genimage.conf"
+#
+# You should also list all recipes that create the artifacts used by genimage
+# to build the desired image.
+#
+# The main purpose of genimage is to create an entire SD, eMMC, NAND, or ubi
+# images with multilple partitions based on different images (kernel,
+# bootloader, rootfs, ...)
+#
+# The name of the resulting image is named the same way normal images are
+# named. You can customize output with the variables `GENIMAGE_IMAGE_NAME` and
+# `GENIMAGE_IMAGE_SUFFIX`.
+#
+# Note that you should also make your genimage image recipe depend on the set
+# of host tools required for building, e.g.
+#
+#   DEPENDS += "e2fstools-native genext2fs-native"
+#
+# You can also use genimage to split up a created rootfs into different
+# partition images. Consider a yocto-created rootfs, for example.
+# You can put all content of the /home directory in a 'data' partition while
+# putting all content of /etc in a config partition and the rest ('/') in the
+# final rootfs partition, then pack all them together to an SD image.
+#
+# In order to do this, you have to provide the name of the image recipe you
+# intend to split up the data for:
+#
+#   GENIMAGE_ROOTFS_IMAGE = "my-production-image"
+#
+# The image recipe must build an archive, either `tar.bz2` (default) or the
+# type matching the extension you set with `GENIMAGE_ROOTFS_IMAGE_FSTYPE`:
+#
+#   GENIMAGE_ROOTFS_IMAGE_FSTYPE = "tar.xz"
+#
+# The split-up is controlled by your genimage config file, using the
+# 'mointpoint' options:
+#
+#   datafs {
+#     [...]
+#     mointpoint = "/home"
+#   }
+#
+#   rootfs {
+#     [...]
+#     mountpoint = "/"
+#   }
+#
+# Most common variables for customization from image recipe:
 #
 # GENIMAGE_IMAGE_SUFFIX	- file extension suffix for created image (default: 'img')
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
-# GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input toofs FSTYPE to use (default: 'tar.bz2')
+# GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
 
 LICENSE = "MIT"
 PACKAGES = ""
