@@ -154,11 +154,16 @@ python do_fetch() {
 
 do_unpack_append() {
     import shutil
+    import os
+    import stat
 
     hooksflags = d.getVarFlags('RAUC_BUNDLE_HOOKS')
     if hooksflags and 'file' in hooksflags:
         hf = hooksflags.get('file')
-        shutil.copy(d.expand("${WORKDIR}/%s" % hf), d.expand("${S}/bundle/%s" % hf))
+        dsthook = d.expand("${S}/bundle/%s" % hf)
+        shutil.copy(d.expand("${WORKDIR}/%s" % hf), dsthook)
+        st = os.stat(dsthook)
+        os.chmod(dsthook, st.st_mode | stat.S_IEXEC)
 }
 
 DEPLOY_DIR_BUNDLE ?= "${DEPLOY_DIR_IMAGE}/bundles"
