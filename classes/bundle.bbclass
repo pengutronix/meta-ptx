@@ -117,7 +117,10 @@ python do_fetch() {
             imgname = imgsource
         elif imgtype == 'kernel':
             # TODO: Add image type support
-            imgsource = "%s-%s.bin" % ("zImage", machine)
+            if slotflags and 'file' in slotflags:
+                imgsource = "%s" % slotflags.get('file')
+            else:
+                imgsource = "%s-%s.bin" % ("zImage", machine)
             imgname = "%s.%s" % (imgsource, "img")
         elif imgtype == 'boot':
             # TODO: adapt if barebox produces determinable output images
