@@ -74,4 +74,4 @@ do_package_write_ipk[noexec] = "1"
 do_package_write_deb[noexec] = "1"
 do_package_write_rpm[noexec] = "1"
 
-addtask genimage after do_unpack before do_build
+addtask genimage after do_configure before do_build
