@@ -135,7 +135,6 @@ python do_fetch() {
         else:
             raise bb.build.FuncFailed('Unknown image type: %s' % imgtype)
 
-        print imgname
         manifest.write("filename=%s\n" % imgname)
         if slotflags and 'hooks' in slotflags:
             manifest.write("hooks=%s\n" % slotflags.get('hooks'))
