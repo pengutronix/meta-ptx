@@ -49,7 +49,7 @@ do_compile () {
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
 
-	export TARGETCFLAGS="${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
+	export TARGETCFLAGS="${TARGET_LDFLAGS}${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 	unset LDFLAGS
 	unset CFLAGS
 	unset CPPFLAGS
