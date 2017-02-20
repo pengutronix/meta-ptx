@@ -60,17 +60,20 @@ do_compile () {
 }
 
 do_install() {
-	install -d ${D}${bindir}
 	if grep "CONFIG_BAREBOXENV_TARGET=y" ${B}/.config; then
+		install -d ${D}${bindir}
 		install -m 0755 ${B}/scripts/bareboxenv-target ${D}${bindir}/bareboxenv
 	fi
 	if grep "CONFIG_BAREBOXCRC32_TARGET=y" ${B}/.config; then
+		install -d ${D}${bindir}
 		install -m 0755 ${B}/scripts/bareboxcrc32-target ${D}${bindir}/bareboxcrc32
 	fi
 	if grep "CONFIG_KERNEL_INSTALL_TARGET=y" ${B}/.config; then
+		install -d ${D}${bindir}
 		install -m 0755 ${B}/scripts/kernel-install-target ${D}${bindir}/kernel-install
 	fi
 	if grep "CONFIG_IMD_TARGET=y" ${B}/.config; then
+		install -d ${D}${bindir}
 		install -m 0755 ${B}/scripts/bareboximd-target ${D}${bindir}/bareboximd
 	fi
 }
