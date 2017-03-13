@@ -72,3 +72,5 @@ SYSTEMD_SERVICE_${PN}-mark-good = "rauc-mark-good.service"
 SYSTEMD_AUTO_ENABLE_${PN} = "enable"
 
 BBCLASSEXTEND = "nativesdk"
+
+DEFAULT_PREFERENCE = "-1"
