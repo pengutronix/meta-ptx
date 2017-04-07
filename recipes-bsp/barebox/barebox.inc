@@ -48,6 +48,7 @@ do_compile () {
 	# Barebox uses pkg-config only for building native tools
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
+	export PKG_CONFIG_PATH="${STAGING_DIR_NATIVE}"
 
 	export TARGETCFLAGS="${TARGET_LDFLAGS}${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 	unset LDFLAGS
