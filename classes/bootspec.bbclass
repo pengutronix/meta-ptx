@@ -56,3 +56,5 @@ python create_bootspec() {
 }
 
 ROOTFS_POSTPROCESS_COMMAND += " create_bootspec; "
+
+IMAGE_INSTALL_append = " kernel-image kernel-devicetree"
