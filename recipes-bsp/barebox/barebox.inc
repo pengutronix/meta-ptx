@@ -88,6 +88,9 @@ do_deploy () {
 	if [ -e ${S}/barebox-flash-image ]; then
 		install -m 644 -t ${DEPLOYDIR}/ ${S}/barebox-flash-image
 	fi
+	if [ -e ${S}/barebox.efi ]; then
+		install -m 644 -t ${DEPLOYDIR}/ ${S}/barebox.efi
+	fi
 	for IMAGE in ${S}/images/*.img; do
 		if [ -e ${IMAGE} ]; then
 			BAREBOX_IMG_BASENAME=$(basename ${IMAGE} .img)${BAREBOX_IMAGE_SUFFIX}
