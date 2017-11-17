@@ -3,17 +3,16 @@
 # Class to generate disk images using the `genimage` tool.
 #
 # In order to build an image, your recipe must inherit the genimage class and
-# have # a valid genimage configuration file in SRC_URI, named
-# `genimage.config`.
+# have a valid genimage configuration file in SRC_URI, named `genimage.config`.
 #
 #   inherit genimage
 #
-#   SRC_URI += "file://genimage.conf"
+#   SRC_URI += "file://genimage.config"
 #
 # You should also list all recipes that create the artifacts used by genimage
 # to build the desired image.
 #
-# The main purpose of genimage is to create an entire SD, eMMC, NAND, or ubi
+# The main purpose of genimage is to create an entire SD, eMMC, NAND, or UBI
 # images with multilple partitions based on different images (kernel,
 # bootloader, rootfs, ...)
 #
@@ -43,11 +42,11 @@
 #   GENIMAGE_ROOTFS_IMAGE_FSTYPE = "tar.xz"
 #
 # The split-up is controlled by your genimage config file, using the
-# 'mointpoint' options:
+# 'mountpoint' options:
 #
 #   datafs {
 #     [...]
-#     mointpoint = "/home"
+#     mountpoint = "/home"
 #   }
 #
 #   rootfs {
@@ -79,7 +78,7 @@ do_build[nostamp] = "1"
 GENIMAGE_IMAGE_SUFFIX ?= "img"
 
 GENIMAGE_IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}-${DATETIME}"
-# Don't include the DATETIME variable in the sstate package sigantures
+# Don't include the DATETIME variable in the sstate package signature
 GENIMAGE_IMAGE_NAME[vardepsexclude] = "DATETIME"
 GENIMAGE_IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${MACHINE}"
 
