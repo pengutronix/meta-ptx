@@ -1,6 +1,8 @@
 # Adds boot spec entry for first FSTYPE found
-inherit linux-kernel-base
 
+# require STAGING_KERNEL_BUILDDIR to be populated properly
+do_rootfs[depends] += "virtual/kernel:do_shared_workdir"
+inherit linux-kernel-base
 KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 
 BOOTSPEC_TITLE ?= "${SUMMARY}"
