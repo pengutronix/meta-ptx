@@ -71,11 +71,7 @@ S = "${WORKDIR}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-do_unpack[nostamp] = "1"
-do_genimage[nostamp] = "1"
 DEPENDS += "genimage-native"
-
-do_build[nostamp] = "1"
 
 GENIMAGE_IMAGE_SUFFIX ?= "img"
 
