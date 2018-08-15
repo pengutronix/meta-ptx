@@ -73,7 +73,7 @@ INHIBIT_DEFAULT_DEPS = "1"
 
 do_unpack[nostamp] = "1"
 do_genimage[nostamp] = "1"
-do_genimage[depends] += "genimage-native:do_populate_sysroot mtd-utils-native:do_populate_sysroot"
+DEPENDS += "genimage-native"
 
 do_build[nostamp] = "1"
 
