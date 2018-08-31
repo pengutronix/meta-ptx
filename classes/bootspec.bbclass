@@ -33,7 +33,7 @@ BOOTSPEC_OPTIONS ?= "${BOOTSPEC_OPTIONS_DEFAULT}"
 BOOTSPEC_OPTIONS[doc] = "Content of the boot spec entry 'options' line"
 
 BOOTSPEC_EXTRALINE ?= ""
-BOOTSPEC_OPTIONS[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
+BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
 python create_bootspec() {
     dtb = d.getVar('KERNEL_DEVICETREE', True).replace('.dtb', '').split()
