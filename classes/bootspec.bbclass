@@ -36,7 +36,7 @@ BOOTSPEC_EXTRALINE ?= ""
 BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
 python create_bootspec() {
-    dtb = d.getVar('KERNEL_DEVICETREE', True).replace('.dtb', '').split()
+    dtb = (d.getVar('KERNEL_DEVICETREE', True) or "default").replace('.dtb', '').split()
     bb.utils.mkdirhier(d.expand("${IMAGE_ROOTFS}/loader/entries/"))
 
     for x in dtb:
@@ -52,11 +52,13 @@ python create_bootspec() {
         bootspecfile.write('options    %s\n' % d.expand('${BOOTSPEC_OPTIONS}'))
         bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE', True).replace(r'\n', '\n'))
         bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}'))
-        bootspecfile.write('devicetree %s\n' % d.expand('/boot/' + x + '.dtb\n'))
+        if x != "default":
+            bootspecfile.write('devicetree %s\n' % d.expand('/boot/' + x + '.dtb\n'))
 
         bootspecfile.close()
 }
 
 ROOTFS_POSTPROCESS_COMMAND += " create_bootspec; "
 
-IMAGE_INSTALL_append = " kernel-image kernel-devicetree"
+IMAGE_INSTALL_append = " kernel-image"
+IMAGE_INSTALL_append = '${@ " kernel-devicetree" if d.getVar('KERNEL_DEVICETREE') else ""}'
