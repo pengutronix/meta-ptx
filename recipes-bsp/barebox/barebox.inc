@@ -11,7 +11,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 inherit kernel-arch deploy
 inherit cml1
 
-DEPENDS = "libusb1-native lzop-native"
+DEPENDS = "libusb1-native lzop-native bison-native flex-native"
 
 PACKAGES += "${PN}-bareboxenv ${PN}-bareboxcrc32 ${PN}-kernel-install \
          ${PN}-bareboximd"
