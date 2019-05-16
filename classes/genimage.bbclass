@@ -85,7 +85,7 @@ GENIMAGE_IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${MACHINE}"
 GENIMAGE_ROOTFS_IMAGE ?= ""
 GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 
-do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_build' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
+do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
 fakeroot do_genimage () {
     cd ${WORKDIR}
