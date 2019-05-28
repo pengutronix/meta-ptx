@@ -13,7 +13,7 @@
 # to build the desired image.
 #
 # The main purpose of genimage is to create an entire SD, eMMC, NAND, or UBI
-# images with multilple partitions based on different images (kernel,
+# image with multiple partitions based on different images (kernel,
 # bootloader, rootfs, ...)
 #
 # The name of the resulting image is named the same way normal images are
@@ -23,7 +23,7 @@
 # Note that you should also make your genimage image recipe depend on the set
 # of host tools required for building, e.g.
 #
-#   DEPENDS += "e2fstools-native genext2fs-native"
+#   DEPENDS += "e2fsprogs-native genext2fs-native"
 #
 # You can also use genimage to split up a created rootfs into different
 # partition images. Consider a yocto-created rootfs, for example.
