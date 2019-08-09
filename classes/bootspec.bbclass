@@ -40,6 +40,7 @@ python create_bootspec() {
     bb.utils.mkdirhier(d.expand("${IMAGE_ROOTFS}/loader/entries/"))
 
     for x in dtb:
+        x = os.path.basename(x)
         bb.note("Creating boot spec entry /loader/entries/" + x + ".conf ...")
 
         try:
