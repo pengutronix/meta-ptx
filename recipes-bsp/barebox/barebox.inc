@@ -40,6 +40,7 @@ do_compile () {
 	if [ -d ${WORKDIR}/env/ ]; then \
 		mkdir -p ${S}/.yocto-defaultenv
 		cp -r ${WORKDIR}/env/* ${S}/.yocto-defaultenv/; \
+		grep -q .yocto-defaultenv ${B}/.config || \
 	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
 		                ${B}/.config; \
 
