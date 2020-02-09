@@ -89,9 +89,9 @@ GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
 do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
+do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
-    cd ${WORKDIR}
 
     sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
