@@ -88,12 +88,23 @@ do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${G
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
-do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
-do_genimage[dirs] = "${B}"
+do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${DEPLOYDIR}"
 
 do_configure () {
     cp ${WORKDIR}/genimage.config ${B}/.config
 }
+
+DEPLOYDIR = "${WORKDIR}/deploy-${PN}"
+SSTATETASKS += "do_genimage"
+do_genimage[sstate-inputdirs] = "${DEPLOYDIR}"
+do_genimage[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
+
+python do_genimage_setscene () {
+    sstate_setscene(d)
+}
+addtask do_genimage_setscene
+do_genimage[dirs] = "${DEPLOYDIR} ${B}"
+do_genimage[stamp-extra-info] = "${MACHINE_ARCH}"
 
 fakeroot do_genimage () {
 
@@ -110,13 +121,13 @@ fakeroot do_genimage () {
         --config ${B}/.config.tmp \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
-        --outputpath ${DEPLOY_DIR_IMAGE} \
+        --outputpath ${DEPLOYDIR} \
         --rootpath ${GENIMAGE_ROOTDIR}
 
     rm ${B}/.config.tmp
 
-    if [ -e ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
-        ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
+    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
+        ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
     fi
 }
 
