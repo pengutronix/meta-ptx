@@ -88,16 +88,12 @@ do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${G
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
+do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
+
 fakeroot do_genimage () {
     cd ${WORKDIR}
 
-    rm -rf ${GENIMAGE_TMPDIR}
-    mkdir -p ${GENIMAGE_TMPDIR}
-
     sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
-
-    rm -rf ${GENIMAGE_ROOTDIR}
-    mkdir -p ${GENIMAGE_ROOTDIR}
 
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
