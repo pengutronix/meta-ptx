@@ -85,11 +85,13 @@ GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 
 do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
+GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
+
 fakeroot do_genimage () {
     cd ${WORKDIR}
 
-    rm -rf ${WORKDIR}/genimage-tmp
-    mkdir -p ${WORKDIR}/genimage-tmp
+    rm -rf ${GENIMAGE_TMPDIR}
+    mkdir -p ${GENIMAGE_TMPDIR}
 
     sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
@@ -105,7 +107,7 @@ fakeroot do_genimage () {
     genimage \
         --loglevel 2 \
         --config ${WORKDIR}/genimage.config \
-        --tmppath ${WORKDIR}/genimage-tmp \
+        --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${DEPLOY_DIR_IMAGE} \
         --rootpath ${WORKDIR}/root
