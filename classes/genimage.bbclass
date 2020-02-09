@@ -86,6 +86,7 @@ GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
+GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
 fakeroot do_genimage () {
     cd ${WORKDIR}
@@ -95,13 +96,13 @@ fakeroot do_genimage () {
 
     sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
 
-    rm -rf ${WORKDIR}/root
-    mkdir -p ${WORKDIR}/root
+    rm -rf ${GENIMAGE_ROOTDIR}
+    mkdir -p ${GENIMAGE_ROOTDIR}
 
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
-        bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${WORKDIR}/root"
-        tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${WORKDIR}/root
+        bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${GENIMAGE_ROOTDIR}"
+        tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
     fi
 
     genimage \
@@ -110,7 +111,7 @@ fakeroot do_genimage () {
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${DEPLOY_DIR_IMAGE} \
-        --rootpath ${WORKDIR}/root
+        --rootpath ${GENIMAGE_ROOTDIR}
 
     if [ -e ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
         ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
