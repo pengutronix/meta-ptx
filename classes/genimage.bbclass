@@ -91,6 +91,10 @@ GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
 do_genimage[dirs] = "${B}"
 
+do_configure () {
+    cp ${WORKDIR}/genimage.config ${B}/.config
+}
+
 fakeroot do_genimage () {
 
     # unpack input rootfs image if given
@@ -99,7 +103,7 @@ fakeroot do_genimage () {
         tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
     fi
 
-    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config > ${B}/.config.tmp
+    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${B}/.config > ${B}/.config.tmp
 
     genimage \
         --loglevel 2 \
@@ -117,7 +121,6 @@ fakeroot do_genimage () {
 }
 
 do_patch[noexec] = "1"
-do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
 deltask do_populate_sysroot
