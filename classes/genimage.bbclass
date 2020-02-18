@@ -93,21 +93,23 @@ do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
 
-    sed -i s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config
-
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
         bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${GENIMAGE_ROOTDIR}"
         tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
     fi
 
+    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config > ${B}/.config.tmp
+
     genimage \
         --loglevel 2 \
-        --config ${WORKDIR}/genimage.config \
+        --config ${B}/.config.tmp \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${DEPLOY_DIR_IMAGE} \
         --rootpath ${GENIMAGE_ROOTDIR}
+
+    rm ${B}/.config.tmp
 
     if [ -e ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
         ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOY_DIR_IMAGE}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
