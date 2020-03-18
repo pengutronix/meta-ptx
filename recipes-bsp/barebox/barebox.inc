@@ -86,13 +86,13 @@ BAREBOX_IMAGE_SUFFIX = ""
 do_deploy[vardepsexclude] = "DATETIME"
 do_deploy () {
 	install -d ${DEPLOYDIR}
-	if [ -e ${S}/barebox-flash-image ]; then
-		install -m 644 -t ${DEPLOYDIR}/ ${S}/barebox-flash-image
+	if [ -e ${B}/barebox-flash-image ]; then
+		install -m 644 -t ${DEPLOYDIR}/ ${B}/barebox-flash-image
 	fi
-	if [ -e ${S}/barebox.efi ]; then
-		install -m 644 -t ${DEPLOYDIR}/ ${S}/barebox.efi
+	if [ -e ${B}/barebox.efi ]; then
+		install -m 644 -t ${DEPLOYDIR}/ ${B}/barebox.efi
 	fi
-	for IMAGE in ${S}/images/*.img; do
+	for IMAGE in ${B}/images/*.img; do
 		if [ -e ${IMAGE} ]; then
 			BAREBOX_IMG_BASENAME=$(basename ${IMAGE} .img)${BAREBOX_IMAGE_SUFFIX}
 			install -m 644 -T ${IMAGE} ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}-${DATETIME}.img
