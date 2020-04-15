@@ -24,11 +24,10 @@ This layer depends on:
 Patches
 =======
 
-Please submit any patches against the ptx layer to the
-meta-ptx mailing list (meta-ptx@pengutronix.de) and cc: the maintainer:
+Please submit any patches against the ptx layer as Pull Request to GitHub
+repository https://github.com/pengutronix/meta-ptx
 
-Maintainer: Enrico Joerns <ejo.pengutronix@de>
-
+Maintainer: Enrico Joerns <e.joerns@pengutronix.de>
 
 Table of Contents
 =================
