@@ -1,0 +1,4 @@
+require genimage.inc
+
+SRC_URI[md5sum] = "84ec07d684f27a425b3789f87c35ffa3"
+SRC_URI[sha256sum] = "4206e253226a384386c01591251f2ed1ea3485ef63f1e696db03600e1213db79"
