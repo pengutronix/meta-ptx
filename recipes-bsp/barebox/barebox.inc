@@ -82,6 +82,10 @@ do_install() {
 
 # Suffix that allows to create different barebox images in one BSP
 BAREBOX_IMAGE_SUFFIX = ""
+# This allows a machine.conf to specify the required images to install instead
+# of installing all found images
+BAREBOX_IMAGES ??= "*.img"
+BAREBOX_IMAGES_TO_DEPLOY = "${@' '.join('${B}/images/%s' % i for i in d.getVar('BAREBOX_IMAGES').split())}"
 
 do_deploy[cleandirs] = "${DEPLOYDIR}"
 do_deploy[vardepsexclude] = "DATETIME"
@@ -93,11 +97,14 @@ do_deploy () {
 	if [ -e ${B}/barebox.efi ]; then
 		install -m 644 -t ${DEPLOYDIR}/ ${B}/barebox.efi
 	fi
-	for IMAGE in ${B}/images/*.img; do
+	for IMAGE in ${BAREBOX_IMAGES_TO_DEPLOY}; do
 		if [ -e ${IMAGE} ]; then
 			BAREBOX_IMG_BASENAME=$(basename ${IMAGE} .img)${BAREBOX_IMAGE_SUFFIX}
 			install -m 644 -T ${IMAGE} ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}-${DATETIME}.img
 			ln -sf ${BAREBOX_IMG_BASENAME}-${DATETIME}.img ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}.img
+		else
+			# Throw an error if the user specified image(s) can't be installed
+			[ "${BAREBOX_IMAGES}" != "*.img" ] && bberror "Image ${IMAGE} not found"
 		fi
 	done
 }
