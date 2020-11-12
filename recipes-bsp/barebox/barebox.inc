@@ -20,7 +20,7 @@ SRC_URI = "http://barebox.org/download/barebox-${PV}.tar.bz2"
 
 S = "${WORKDIR}/barebox-${PV}"
 
-COMPATIBLE_MACHINE = "none"
+BAREBOX_CONFIG ?= ""
 
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
@@ -37,7 +37,11 @@ do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
 		cp ${WORKDIR}/defconfig ${S}/.config
 	else
-		bbwarn "No defconfig given"
+		if [ -n "${BAREBOX_CONFIG}" ]; then
+			oe_runmake ${BAREBOX_CONFIG}
+		else
+			bbfatal "No defconfig given. Either add file 'file://defconfig' to SRC_URI or set BAREBOX_CONFIG"
+		fi
 	fi
 
 	scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
