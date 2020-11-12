@@ -104,7 +104,7 @@ do_deploy () {
 			ln -sf ${BAREBOX_IMG_BASENAME}-${DATETIME}.img ${DEPLOYDIR}/${BAREBOX_IMG_BASENAME}.img
 		else
 			# Throw an error if the user specified image(s) can't be installed
-			[ "${BAREBOX_IMAGES}" != "*.img" ] && bberror "Image ${IMAGE} not found"
+			[ "${BAREBOX_IMAGES}" != "*.img" ] && bberror "Image ${IMAGE} not found" || true
 		fi
 	done
 }
