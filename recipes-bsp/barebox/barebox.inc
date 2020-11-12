@@ -24,6 +24,15 @@ COMPATIBLE_MACHINE = "none"
 
 EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
 
+def find_cfgs(d):
+    sources=src_patches(d, True)
+    sources_list=[]
+    for s in sources:
+        if s.endswith('.cfg'):
+            sources_list.append(s)
+
+    return sources_list
+
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
 		cp ${WORKDIR}/defconfig ${S}/.config
@@ -31,6 +40,7 @@ do_configure() {
 		bbwarn "No defconfig given"
 	fi
 
+	scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
 	cml1_do_configure
 }
 
