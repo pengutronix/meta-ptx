@@ -23,8 +23,6 @@ B = "${WORKDIR}/build"
 
 BAREBOX_CONFIG ?= ""
 
-EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX} -C ${S} O=${B}"
-
 def find_cfgs(d):
     sources=src_patches(d, True)
     sources_list=[]
@@ -33,6 +31,20 @@ def find_cfgs(d):
             sources_list.append(s)
 
     return sources_list
+
+def get_layer_rev(path):
+    try:
+        rev, _ = bb.process.run("git describe --match='' --always --dirty --broken", cwd=path)
+    except bb.process.ExecutionError:
+        rev = ""
+    return rev.strip()
+
+BAREBOX_BUILDSYSTEM_VERSION ??= "${@get_layer_rev(os.path.dirname(d.getVar('FILE')))}"
+
+EXTRA_OEMAKE = " \
+  CROSS_COMPILE=${TARGET_PREFIX} -C ${S} O=${B} \
+  BUILDSYSTEM_VERSION=${BAREBOX_BUILDSYSTEM_VERSION} \
+"
 
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
