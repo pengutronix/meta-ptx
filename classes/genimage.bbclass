@@ -62,6 +62,8 @@
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
 
+inherit image-artifact-names
+
 LICENSE = "MIT"
 PACKAGES = ""
 
