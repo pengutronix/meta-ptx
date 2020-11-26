@@ -1,0 +1,48 @@
+name: meta-ptx CI
+
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+jobs:
+  build:
+    name: meta-ptx Build
+    runs-on: ubuntu-20.04
+    timeout-minutes: 720
+    steps:
+      - name: Install required packages
+        run: |
+          sudo apt-get install diffstat
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: meta-ptx
+      - name: Clone poky
+        run: git clone -b master git://git.yoctoproject.org/poky
+      - name: Clone meta-openembedded
+        run: git clone -b master https://github.com/openembedded/meta-openembedded.git
+      - name: Initialize build directory
+        run: |
+          source poky/oe-init-build-env build
+          bitbake-layers add-layer ../meta-ptx
+          echo 'INHERIT += "rm_work"' >> conf/local.conf
+          echo 'DISTRO_FEATURES_remove = "alsa bluetooth usbgadget usbhost wifi nfs zeroconf pci 3g nfc x11 opengl ptest wayland vulkan"' >> conf/local.conf
+          echo 'SSTATE_MIRRORS = "file://.* http://195.201.147.117/sstate-cache/PATH"' >> conf/local.conf
+      - name: Build barebox
+        run: |
+          source poky/oe-init-build-env build
+          echo 'BAREBOX_CONFIG = "efi_defconfig"' >> conf/local.conf
+          bitbake barebox
+      - name: Build genimage, genimage-native
+        run: |
+          source poky/oe-init-build-env build
+          bitbake genimage genimage-native
+      - name: Build dt-utils
+        run: |
+          source poky/oe-init-build-env build
+          bitbake dt-utils
