@@ -62,12 +62,16 @@
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
 
+inherit deploy
+
 LICENSE = "MIT"
 PACKAGES = ""
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 S = "${WORKDIR}"
+
+B = "${WORKDIR}/genimage-${PN}"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
@@ -88,7 +92,7 @@ do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${G
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
-do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${DEPLOYDIR}"
+do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
 
 do_configure () {
     if grep -vq "@IMAGE@" ${WORKDIR}/genimage.config; then
@@ -99,16 +103,7 @@ do_configure () {
 }
 
 DEPLOYDIR = "${WORKDIR}/deploy-${PN}"
-SSTATETASKS += "do_genimage"
-do_genimage[sstate-inputdirs] = "${DEPLOYDIR}"
-do_genimage[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
-
-python do_genimage_setscene () {
-    sstate_setscene(d)
-}
-addtask do_genimage_setscene
-do_genimage[dirs] = "${DEPLOYDIR} ${B}"
-do_genimage[stamp-extra-info] = "${MACHINE_ARCH}"
+do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
 
@@ -125,15 +120,24 @@ fakeroot do_genimage () {
         --config ${B}/.config.tmp \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
-        --outputpath ${DEPLOYDIR} \
+        --outputpath ${B} \
         --rootpath ${GENIMAGE_ROOTDIR}
 
     rm ${B}/.config.tmp
+}
+do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
+
+addtask genimage after do_configure before do_build
+
+do_deploy () {
+    install ${B}/* ${DEPLOYDIR}/
 
     if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
         ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
     fi
 }
+
+addtask deploy after do_genimage before do_build
 
 do_patch[noexec] = "1"
 do_compile[noexec] = "1"
@@ -146,4 +150,3 @@ deltask do_package_write_ipk
 deltask do_package_write_deb
 deltask do_package_write_rpm
 
-addtask genimage after do_configure before do_build
