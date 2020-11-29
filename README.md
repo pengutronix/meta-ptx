@@ -1,3 +1,5 @@
+[![meta-ptx CI](https://github.com/pengutronix/meta-ptx/workflows/meta-ptx%20CI/badge.svg)](https://github.com/pengutronix/meta-ptx/actions?query=workflow%3A%22meta-ptx+CI%22)
+
 The meta-ptx layer provides support for the `barebox` bootloader,
 the `genimage` image generation mechanism, and some other useful tools and
 patches
