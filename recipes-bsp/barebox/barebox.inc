@@ -19,10 +19,11 @@ PACKAGES += "${PN}-bareboxenv ${PN}-bareboxcrc32 ${PN}-kernel-install \
 SRC_URI = "http://barebox.org/download/barebox-${PV}.tar.bz2"
 
 S = "${WORKDIR}/barebox-${PV}"
+B = "${WORKDIR}/build"
 
 BAREBOX_CONFIG ?= ""
 
-EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX}"
+EXTRA_OEMAKE = "CROSS_COMPILE=${TARGET_PREFIX} -C ${S} O=${B}"
 
 def find_cfgs(d):
     sources=src_patches(d, True)
@@ -35,7 +36,7 @@ def find_cfgs(d):
 
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
-		cp ${WORKDIR}/defconfig ${S}/.config
+		cp ${WORKDIR}/defconfig ${B}/.config
 	else
 		if [ -n "${BAREBOX_CONFIG}" ]; then
 			oe_runmake ${BAREBOX_CONFIG}
@@ -44,7 +45,7 @@ do_configure() {
 		fi
 	fi
 
-	scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
+	${S}/scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
 	cml1_do_configure
 }
 
@@ -52,8 +53,8 @@ do_compile () {
 	# If there is an 'env' directory, append its content
 	# to the compiled environment
 	if [ -d ${WORKDIR}/env/ ]; then \
-		mkdir -p ${S}/.yocto-defaultenv
-		cp -r ${WORKDIR}/env/* ${S}/.yocto-defaultenv/; \
+		mkdir -p ${B}/.yocto-defaultenv
+		cp -r ${WORKDIR}/env/* ${B}/.yocto-defaultenv/; \
 		grep -q .yocto-defaultenv ${B}/.config || \
 	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
 		                ${B}/.config; \
