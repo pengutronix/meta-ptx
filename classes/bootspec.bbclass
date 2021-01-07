@@ -27,6 +27,10 @@ python () {
         if option:
             d.setVar('BOOTSPEC_OPTIONS_DEFAULT', option)
             break;
+
+    if d.getVar('PREFERRED_PROVIDER_virtual/dtb'):
+        d.appendVarFlag('do_rootfs', 'depends', ' virtual/dtb:do_populate_sysroot')
+        d.setVar('EXTERNAL_KERNEL_DEVICETREE', '${RECIPE_SYSROOT}/boot/devicetree')
 }
 
 BOOTSPEC_OPTIONS ?= "${BOOTSPEC_OPTIONS_DEFAULT}"
@@ -36,10 +40,15 @@ BOOTSPEC_EXTRALINE ?= ""
 BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
 python create_bootspec() {
-    dtbs = (d.getVar('KERNEL_DEVICETREE') or "default").split()
+    dtbs = (d.getVar('KERNEL_DEVICETREE') or '').split()
+    ext_dtbs = os.listdir(d.getVar('EXTERNAL_KERNEL_DEVICETREE')) if d.getVar('EXTERNAL_KERNEL_DEVICETREE') else []
+    ext_dtbs = [x for x in ext_dtbs if x.endswith('.dtb')]
+    if not dtbs and not ext_dtbs:
+        dtbs = ['default']
+
     bb.utils.mkdirhier(d.expand("${IMAGE_ROOTFS}/loader/entries/"))
 
-    for x in dtbs:
+    for x in set(dtbs + ext_dtbs):
         x = os.path.basename(x)
         conf = "/loader/entries/" + x.replace('.dtb', '') + ".conf"
 
@@ -56,7 +65,9 @@ python create_bootspec() {
         bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE').replace(r'\n', '\n'))
         bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}'))
         if x != "default":
-            bootspecfile.write('devicetree %s\n' % d.expand('/boot/' + x))
+            # Prefer BSP dts if BSP and kernel provide the same dts
+            dtbpath = '/boot/devicetree/' if x in ext_dtbs else '/boot/'
+            bootspecfile.write('devicetree %s\n' % d.expand(dtbpath + x))
 
         bootspecfile.close()
 }
