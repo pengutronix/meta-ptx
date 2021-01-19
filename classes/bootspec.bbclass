@@ -36,10 +36,10 @@ BOOTSPEC_EXTRALINE ?= ""
 BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
 python create_bootspec() {
-    dtb = (d.getVar('KERNEL_DEVICETREE') or "default").split()
+    dtbs = (d.getVar('KERNEL_DEVICETREE') or "default").split()
     bb.utils.mkdirhier(d.expand("${IMAGE_ROOTFS}/loader/entries/"))
 
-    for x in dtb:
+    for x in dtbs:
         x = os.path.basename(x)
         conf = "/loader/entries/" + x.replace('.dtb', '') + ".conf"
 
