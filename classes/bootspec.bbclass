@@ -22,8 +22,8 @@ BOOTSPEC_OPTIONS_DEFAULT = ""
 python () {
     option = ""
 
-    for type in (d.getVar('IMAGE_FSTYPES', True) or "").split():
-        option = d.getVar('BOOTSPEC_OPTIONS_%s' % type, True)
+    for type in (d.getVar('IMAGE_FSTYPES') or "").split():
+        option = d.getVar('BOOTSPEC_OPTIONS_%s' % type)
         if option:
             d.setVar('BOOTSPEC_OPTIONS_DEFAULT', option)
             break;
@@ -36,7 +36,7 @@ BOOTSPEC_EXTRALINE ?= ""
 BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
 python create_bootspec() {
-    dtb = (d.getVar('KERNEL_DEVICETREE', True) or "default").replace('.dtb', '').split()
+    dtb = (d.getVar('KERNEL_DEVICETREE') or "default").replace('.dtb', '').split()
     bb.utils.mkdirhier(d.expand("${IMAGE_ROOTFS}/loader/entries/"))
 
     for x in dtb:
@@ -48,10 +48,10 @@ python create_bootspec() {
         except OSError:
             raise bb.build.FuncFailed('Unable to open boot spec file for writing')
 
-        bootspecfile.write('title      %s\n' % d.getVar('BOOTSPEC_TITLE', True))
-        bootspecfile.write('version    %s\n' % d.getVar('BOOTSPEC_VERSION', True))
+        bootspecfile.write('title      %s\n' % d.getVar('BOOTSPEC_TITLE'))
+        bootspecfile.write('version    %s\n' % d.getVar('BOOTSPEC_VERSION'))
         bootspecfile.write('options    %s\n' % d.expand('${BOOTSPEC_OPTIONS}'))
-        bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE', True).replace(r'\n', '\n'))
+        bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE').replace(r'\n', '\n'))
         bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}'))
         if x != "default":
             bootspecfile.write('devicetree %s\n' % d.expand('/boot/' + x + '.dtb\n'))
