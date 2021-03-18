@@ -102,7 +102,6 @@ do_configure () {
     cp ${WORKDIR}/genimage.config ${B}/.config
 }
 
-DEPLOYDIR = "${WORKDIR}/deploy-${PN}"
 do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
