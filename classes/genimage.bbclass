@@ -92,6 +92,9 @@ GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 
 do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
+GENIMAGE_CREATE_BMAP ?= "0"
+do_genimage[depends] += "${@'bmap-tools-native:do_populate_sysroot' if d.getVar('GENIMAGE_CREATE_BMAP') == '1' else ''}"
+
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
@@ -122,6 +125,10 @@ fakeroot do_genimage () {
         --outputpath ${B} \
         --rootpath ${GENIMAGE_ROOTDIR}
 
+    if [ "${GENIMAGE_CREATE_BMAP}" = 1 ] ; then
+        bmaptool create -o ${B}/${GENIMAGE_IMAGE_FULLNAME}.bmap ${B}/${GENIMAGE_IMAGE_FULLNAME}
+    fi
+
     rm ${B}/.config
 }
 do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
@@ -134,6 +141,10 @@ do_deploy () {
     if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_FULLNAME} ]; then
         ln -sf ${GENIMAGE_IMAGE_FULLNAME} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_FULLNAME}
     fi
+    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_FULLNAME}.bmap ] ; then
+        ln -sf ${GENIMAGE_IMAGE_FULLNAME}.bmap ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_FULLNAME}.bmap
+    fi
+
 }
 
 addtask deploy after do_genimage before do_build
