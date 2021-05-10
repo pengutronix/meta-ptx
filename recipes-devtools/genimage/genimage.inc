@@ -12,4 +12,4 @@ EXTRA_OECONF = "--enable-largefile"
 
 inherit pkgconfig autotools gettext
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"

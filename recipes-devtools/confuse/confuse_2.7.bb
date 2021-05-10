@@ -14,4 +14,4 @@ EXTRA_OECONF = "--enable-shared"
 
 inherit autotools gettext binconfig pkgconfig lib_package
 
-BBCLASSEXTEND = "native"
+BBCLASSEXTEND = "native nativesdk"
