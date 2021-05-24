@@ -113,6 +113,8 @@ fakeroot do_genimage () {
     fi
 
     sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${B}/.config > ${B}/.config.tmp
+    
+    find ${B} -maxdepth 1 -name "*.${GENIMAGE_IMAGE_SUFFIX}" -delete
 
     genimage \
         --loglevel 2 \
@@ -129,7 +131,9 @@ do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
 addtask genimage after do_configure before do_build
 
 do_deploy () {
-    install ${B}/* ${DEPLOYDIR}/
+    find ${DEPLOYDIR} -maxdepth 1 -name "*.${GENIMAGE_IMAGE_SUFFIX}" -delete
+    
+    install -v ${B}/* ${DEPLOYDIR}/
 
     if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
         ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
