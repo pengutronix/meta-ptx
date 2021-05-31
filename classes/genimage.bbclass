@@ -84,6 +84,9 @@ GENIMAGE_IMAGE_NAME = "${IMAGE_BASENAME}-${MACHINE}-${DATETIME}"
 GENIMAGE_IMAGE_NAME[vardepsexclude] = "DATETIME"
 GENIMAGE_IMAGE_LINK_NAME = "${IMAGE_BASENAME}-${MACHINE}"
 
+GENIMAGE_IMAGE_FULLNAME ?= "${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}"
+GENIMAGE_IMAGE_LINK_FULLNAME ?= "${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}"
+
 GENIMAGE_ROOTFS_IMAGE ?= ""
 GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 
@@ -103,7 +106,7 @@ do_configure () {
 do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
-    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config > ${B}/.config
+    sed s:@IMAGE@:${GENIMAGE_IMAGE_FULLNAME}:g ${WORKDIR}/genimage.config > ${B}/.config
 
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
@@ -128,8 +131,8 @@ addtask genimage after do_configure before do_build
 do_deploy () {
     install ${B}/* ${DEPLOYDIR}/
 
-    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ]; then
-        ln -sf ${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SUFFIX}
+    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_FULLNAME} ]; then
+        ln -sf ${GENIMAGE_IMAGE_FULLNAME} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_FULLNAME}
     fi
 }
 
