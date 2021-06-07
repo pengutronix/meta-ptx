@@ -92,19 +92,18 @@ do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${G
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 
-do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR}"
+do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
     if grep -vq "@IMAGE@" ${WORKDIR}/genimage.config; then
         bbnote "genimage.config does not contain @IMAGE@ marker"
     fi
-
-    cp ${WORKDIR}/genimage.config ${B}/.config
 }
 
 do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
+    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${WORKDIR}/genimage.config > ${B}/.config
 
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
@@ -112,17 +111,15 @@ fakeroot do_genimage () {
         tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
     fi
 
-    sed s:@IMAGE@:${GENIMAGE_IMAGE_NAME}.${GENIMAGE_IMAGE_SUFFIX}:g ${B}/.config > ${B}/.config.tmp
-
     genimage \
         --loglevel 2 \
-        --config ${B}/.config.tmp \
+        --config ${B}/.config \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${B} \
         --rootpath ${GENIMAGE_ROOTDIR}
 
-    rm ${B}/.config.tmp
+    rm ${B}/.config
 }
 do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
 
