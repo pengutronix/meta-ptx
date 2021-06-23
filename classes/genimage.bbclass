@@ -95,7 +95,7 @@ GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
-    if grep -vq "@IMAGE@" ${WORKDIR}/genimage.config; then
+    if ! grep -q "@IMAGE@" ${WORKDIR}/genimage.config; then
         bbnote "genimage.config does not contain @IMAGE@ marker"
     fi
 }
