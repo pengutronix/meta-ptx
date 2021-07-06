@@ -61,6 +61,9 @@ do_configure() {
 	cml1_do_configure
 }
 
+BAREBOX_FIRMWARE_DIR ?= ""
+BAREBOX_FIRMWARE_DIR[doc] = "Overwrite barebox' firmware blobs search directory (CONFIG_EXTRA_FIRMWARE_DIR) with this path"
+
 do_compile () {
 	# If there is an 'env' directory, append its content
 	# to the compiled environment
@@ -71,6 +74,12 @@ do_compile () {
 	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
 		                ${B}/.config; \
 
+	fi
+
+	# If ${BAREBOX_FIRMWARE_DIR} is set, use that for CONFIG_EXTRA_FIRMWARE_DIR
+	if [ -n "${BAREBOX_FIRMWARE_DIR}" ]; then
+		sed -i -e "s,^\(CONFIG_EXTRA_FIRMWARE_DIR=\"\).*\"$,\1${BAREBOX_FIRMWARE_DIR}\"," \
+				${B}/.config
 	fi
 
 	# Barebox uses pkg-config only for building native tools
