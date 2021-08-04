@@ -87,8 +87,7 @@ do_compile () {
 	export PKG_CONFIG_SYSROOT_DIR=
 	export PKG_CONFIG_PATH="${STAGING_DIR_NATIVE}"
 
-	export TARGETCFLAGS="${TARGET_LDFLAGS}${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
-	export userccflags="${TARGETCFLAGS}"
+	export userccflags="${TARGET_LDFLAGS}${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}"
 	unset LDFLAGS
 	unset CFLAGS
 	unset CPPFLAGS
