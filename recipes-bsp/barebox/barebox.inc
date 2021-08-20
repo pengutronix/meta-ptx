@@ -146,10 +146,10 @@ do_deploy () {
 	done
 }
 
-FILES_${PN} = ""
-FILES_${PN}-bareboxenv = "${bindir}/bareboxenv"
-FILES_${PN}-bareboxcrc32 = "${bindir}/bareboxcrc32"
-FILES_${PN}-kernel-install = "${bindir}/kernel-install"
-FILES_${PN}-bareboximd = "${bindir}/bareboximd"
+FILES:${PN} = ""
+FILES:${PN}-bareboxenv = "${bindir}/bareboxenv"
+FILES:${PN}-bareboxcrc32 = "${bindir}/bareboxcrc32"
+FILES:${PN}-kernel-install = "${bindir}/kernel-install"
+FILES:${PN}-bareboximd = "${bindir}/bareboximd"
 
 addtask deploy before do_build after do_compile

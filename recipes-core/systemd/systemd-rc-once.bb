@@ -24,14 +24,14 @@ do_install() {
 	install -d ${D}${sysconfdir}/rc.once.d
 }
 
-FILES_${PN} += "\
+FILES:${PN} += "\
   /lib/init/rc-once.sh \
   /lib/systemd/systemd-rc-once \
   /lib/systemd/system/system-update.target.wants/rc-once.service \
 "
 
-SYSTEMD_SERVICE_${PN} = "rc-once.service"
+SYSTEMD_SERVICE:${PN} = "rc-once.service"
 
-pkg_postinst_${PN}() {
+pkg_postinst:${PN}() {
 	ln -sf etc/rc.once.d $D/system-update
 }

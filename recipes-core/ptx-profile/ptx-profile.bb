@@ -11,4 +11,4 @@ do_install () {
 	install -m 0755 ${S}/00-ptx.sh ${D}${sysconfdir}/profile.d/
 }
 
-FILES_${PN} = "${sysconfdir}/profile.d/00-ptx.sh"
+FILES:${PN} = "${sysconfdir}/profile.d/00-ptx.sh"
