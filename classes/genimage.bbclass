@@ -12,7 +12,7 @@
 # You also need to depend on all recipes creating artifacts used by
 # genimage to build the final (disk) image, e.g.:
 #
-#   do_genimage[depends] += "virtual/bootloader core-image-minimal:do_image_complete"
+#   do_genimage[depends] += "virtual/bootloader:do_deploy core-image-minimal:do_image_complete"
 #
 # The main purpose of genimage is to create an entire SD, eMMC, NAND, or UBI
 # image with multiple partitions based on different images (kernel,
