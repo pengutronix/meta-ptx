@@ -72,6 +72,8 @@
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
 # GENIMAGE_ROOTFS_IMAGE_SUFFIX	- IMAGE_NAME_SUFFIX to use (default: '${IMAGE_NAME_SUFFIX}')
 # GENIMAGE_VARIABLES[VAR]	- replace @VAR@ in config with variable flag value
+# GENIMAGE_COMPRESSION - compress the generated image. Allowed values
+# are 'none' for no compression (the default), 'gzip' and 'xz'.
 
 inherit image-artifact-names deploy
 
@@ -111,6 +113,18 @@ do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${G
 
 GENIMAGE_CREATE_BMAP ?= "0"
 do_genimage[depends] += "${@'bmaptool-native:do_populate_sysroot' if d.getVar('GENIMAGE_CREATE_BMAP') == '1' else ''}"
+
+GENIMAGE_COMPRESSION ??= "none"
+
+GENIMAGE_COMPRESS_DEPENDS[none] = ""
+GENIMAGE_COMPRESS_DEPENDS[gzip] = "pigz-native:do_populate_sysroot"
+GENIMAGE_COMPRESS_DEPENDS[xz]   = "xz-native:do_populate_sysroot"
+do_genimage[depends] += "${@d.getVarFlag('GENIMAGE_COMPRESS_DEPENDS', '${GENIMAGE_COMPRESSION}')}"
+
+GENIMAGE_COMPRESS_CMD[none] = ":"
+GENIMAGE_COMPRESS_CMD[gzip] = "gzip -f -9 -n"
+GENIMAGE_COMPRESS_CMD[xz]   = "xz -f"
+GENIMAGE_COMPRESS_CMD = "${@d.getVarFlag('GENIMAGE_COMPRESS_CMD', '${GENIMAGE_COMPRESSION}')}"
 
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
@@ -164,6 +178,8 @@ fakeroot do_genimage () {
     if [ "${GENIMAGE_CREATE_BMAP}" = 1 ] ; then
         bmaptool create -o ${B}/${GENIMAGE_IMAGE_FULLNAME}.bmap ${B}/${GENIMAGE_IMAGE_FULLNAME}
     fi
+
+    ${GENIMAGE_COMPRESS_CMD} ${B}/${GENIMAGE_IMAGE_FULLNAME}
 
     rm ${B}/.config
 }
