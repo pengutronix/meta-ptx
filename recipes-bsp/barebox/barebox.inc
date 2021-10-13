@@ -49,12 +49,10 @@ EXTRA_OEMAKE = " \
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
 		cp ${WORKDIR}/defconfig ${B}/.config
+	elif [ -n "${BAREBOX_CONFIG}" ]; then
+		oe_runmake ${BAREBOX_CONFIG}
 	else
-		if [ -n "${BAREBOX_CONFIG}" ]; then
-			oe_runmake ${BAREBOX_CONFIG}
-		else
-			bbfatal "No defconfig given. Either add file 'file://defconfig' to SRC_URI or set BAREBOX_CONFIG"
-		fi
+		bbfatal "No defconfig given. Either add file 'file://defconfig' to SRC_URI or set BAREBOX_CONFIG"
 	fi
 
 	${S}/scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
