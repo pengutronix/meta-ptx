@@ -46,6 +46,9 @@ EXTRA_OEMAKE = " \
   BUILDSYSTEM_VERSION=${BAREBOX_BUILDSYSTEM_VERSION} \
 "
 
+BAREBOX_FIRMWARE_DIR ?= ""
+BAREBOX_FIRMWARE_DIR[doc] = "Overwrite barebox' firmware blobs search directory (CONFIG_EXTRA_FIRMWARE_DIR) with this path"
+
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
 		cp ${WORKDIR}/defconfig ${B}/.config
@@ -60,23 +63,21 @@ do_configure() {
 	find ${WORKDIR} -mindepth 1 -maxdepth 1 -type d -name 'env*' -execdir rsync -av '{}/' ${S}/.defaultenv ';'
 	echo "CONFIG_DEFAULT_ENVIRONMENT_PATH=\"${S}/.defaultenv\"" > ${B}/.defaultenv.cfg
 
+	# If ${BAREBOX_FIRMWARE_DIR} is set, use that for CONFIG_EXTRA_FIRMWARE_DIR
+	touch ${B}/.firmware.cfg
+	if [ -n "${BAREBOX_FIRMWARE_DIR}" ]; then
+		echo "CONFIG_EXTRA_FIRMWARE_DIR=\"${BAREBOX_FIRMWARE_DIR}\"" > ${B}/.firmware.cfg
+	fi
+
 	${S}/scripts/kconfig/merge_config.sh -m ${B}/.config \
 		${B}/.defaultenv.cfg \
+		${B}/.firmware.cfg \
 		${@" ".join(find_cfgs(d))}
 
 	cml1_do_configure
 }
 
-BAREBOX_FIRMWARE_DIR ?= ""
-BAREBOX_FIRMWARE_DIR[doc] = "Overwrite barebox' firmware blobs search directory (CONFIG_EXTRA_FIRMWARE_DIR) with this path"
-
 do_compile () {
-	# If ${BAREBOX_FIRMWARE_DIR} is set, use that for CONFIG_EXTRA_FIRMWARE_DIR
-	if [ -n "${BAREBOX_FIRMWARE_DIR}" ]; then
-		sed -i -e "s,^\(CONFIG_EXTRA_FIRMWARE_DIR=\"\).*\"$,\1${BAREBOX_FIRMWARE_DIR}\"," \
-				${B}/.config
-	fi
-
 	# Barebox uses pkg-config only for building native tools
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
