@@ -10,6 +10,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 inherit kernel-arch deploy
 inherit cml1
+inherit pkgconfig
 
 DEPENDS = "libusb1-native lzop-native bison-native flex-native"
 
