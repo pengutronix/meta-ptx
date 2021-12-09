@@ -1,10 +1,5 @@
 # Adds boot spec entry for first FSTYPE found
 
-# require STAGING_KERNEL_BUILDDIR to be populated properly
-do_rootfs[depends] += "virtual/kernel:do_shared_workdir"
-inherit linux-kernel-base
-KERNEL_VERSION = "${@get_kernelversion_file("${STAGING_KERNEL_BUILDDIR}")}"
-
 BOOTSPEC_TITLE ?= "${SUMMARY}"
 BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
 
@@ -14,7 +9,7 @@ BOOTSPEC_OPTIONS_squashfs = "rootfstype=squashfs"
 BOOTSPEC_OPTIONS_squashfs-lzo = "rootfstype=squashfs"
 BOOTSPEC_OPTIONS_squashfs-xz = "rootfstype=squashfs"
 
-BOOTSPEC_VERSION ?= "${KERNEL_VERSION}"
+BOOTSPEC_VERSION ?= "${PV}"
 BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
 
 BOOTSPEC_OPTIONS_DEFAULT = ""
@@ -63,7 +58,7 @@ python create_bootspec() {
         bootspecfile.write('version    %s\n' % d.getVar('BOOTSPEC_VERSION'))
         bootspecfile.write('options    %s\n' % d.expand('${BOOTSPEC_OPTIONS}'))
         bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE').replace(r'\n', '\n'))
-        bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}-${KERNEL_VERSION}'))
+        bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}'))
         if x != "default":
             # Prefer BSP dts if BSP and kernel provide the same dts
             dtbpath = '/boot/devicetree/' if x in ext_dtbs else '/boot/'
