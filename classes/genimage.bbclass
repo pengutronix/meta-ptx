@@ -97,6 +97,7 @@ do_genimage[depends] += "${@'bmap-tools-native:do_populate_sysroot' if d.getVar(
 
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
+GENIMAGE_OPTS ??= ""
 
 do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
@@ -123,7 +124,8 @@ fakeroot do_genimage () {
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
         --outputpath ${B} \
-        --rootpath ${GENIMAGE_ROOTDIR}
+        --rootpath ${GENIMAGE_ROOTDIR} \
+        ${GENIMAGE_OPTS}
 
     if [ "${GENIMAGE_CREATE_BMAP}" = 1 ] ; then
         bmaptool create -o ${B}/${GENIMAGE_IMAGE_FULLNAME}.bmap ${B}/${GENIMAGE_IMAGE_FULLNAME}
