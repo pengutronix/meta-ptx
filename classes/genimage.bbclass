@@ -123,6 +123,7 @@ fakeroot do_genimage () {
         --config ${B}/.config \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
+        --includepath ${WORKDIR} \
         --outputpath ${B} \
         --rootpath ${GENIMAGE_ROOTDIR} \
         ${GENIMAGE_OPTS}
