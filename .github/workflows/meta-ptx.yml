@@ -46,3 +46,7 @@ jobs:
         run: |
           source poky/oe-init-build-env build
           bitbake dt-utils
+      - name: Build microcom
+        run: |
+          source poky/oe-init-build-env build
+          bitbake microcom
