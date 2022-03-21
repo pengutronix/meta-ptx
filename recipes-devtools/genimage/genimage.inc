@@ -1,4 +1,5 @@
 SUMMARY = "Image generation tool"
+HOMEPAGE = "https://github.com/pengutronix/genimage"
 
 SECTION = "base"
 LICENSE = "GPLv2"
