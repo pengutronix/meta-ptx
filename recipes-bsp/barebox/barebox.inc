@@ -3,7 +3,7 @@ HOMEPAGE = "http://www.barebox.org/"
 SECTION = "bootloaders"
 PROVIDES = "virtual/bootloader"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=f5125d13e000b9ca1f0d3364286c4192"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"

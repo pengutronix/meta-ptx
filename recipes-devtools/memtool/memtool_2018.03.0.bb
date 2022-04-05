@@ -1,7 +1,7 @@
 DESCRIPTION = "A handy tool to manipulate and read memory mapped registers"
 HOMEPAGE = "https://github.com/pengutronix/memtool"
 
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "http://www.pengutronix.de/software/memtool/downloads/memtool-${PV}.tar.xz"
