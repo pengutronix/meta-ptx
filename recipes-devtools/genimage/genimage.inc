@@ -2,7 +2,7 @@ SUMMARY = "Image generation tool"
 HOMEPAGE = "https://github.com/pengutronix/genimage"
 
 SECTION = "base"
-LICENSE = "GPLv2"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://genimage.c;beginline=1;endline=15;md5=bd66ae8b32d8a336e09c1d4a9924a49f"
 
 DEPENDS = "confuse dosfstools"
