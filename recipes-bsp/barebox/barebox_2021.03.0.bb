@@ -1,3 +1,0 @@
-require barebox.inc
-
-SRC_URI[sha256sum] = "c8ff2f176493a41914789e0843079ba9186a56014e37c6db1459ecb152c1801f"
