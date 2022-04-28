@@ -1,4 +1,4 @@
-# genimage.bbclas
+# genimage.bbclass
 #
 # Class to generate disk images using the `genimage` tool.
 #
