@@ -3,7 +3,8 @@
 # Class to generate disk images using the `genimage` tool.
 #
 # In order to build an image, your recipe must inherit the genimage class and
-# have a valid genimage configuration file in SRC_URI, named `genimage.config`.
+# have a valid genimage configuration file in SRC_URI, named `genimage.config`
+# by default.
 #
 #   inherit genimage
 #
@@ -58,6 +59,7 @@
 #
 # Most common variables for customization from image recipe:
 #
+# GENIMAGE_CONFIG	- config passed to genimage --config (default: 'genimage.config')
 # GENIMAGE_IMAGE_SUFFIX	- file extension suffix for created image (default: 'img')
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
@@ -76,6 +78,8 @@ B = "${WORKDIR}/genimage-${PN}"
 INHIBIT_DEFAULT_DEPS = "1"
 
 DEPENDS += "genimage-native"
+
+GENIMAGE_CONFIG ?= "genimage.config"
 
 GENIMAGE_IMAGE_SUFFIX ?= "img"
 
@@ -102,15 +106,15 @@ GENIMAGE_OPTS ??= ""
 do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
-    if ! grep -q "@IMAGE@" ${WORKDIR}/genimage.config; then
-        bbnote "genimage.config does not contain @IMAGE@ marker"
+    if ! grep -q "@IMAGE@" ${WORKDIR}/${GENIMAGE_CONFIG}; then
+        bbnote "${GENIMAGE_CONFIG} does not contain @IMAGE@ marker"
     fi
 }
 
 do_genimage[dirs] = "${B}"
 
 fakeroot do_genimage () {
-    sed s:@IMAGE@:${GENIMAGE_IMAGE_FULLNAME}:g ${WORKDIR}/genimage.config > ${B}/.config
+    sed s:@IMAGE@:${GENIMAGE_IMAGE_FULLNAME}:g ${WORKDIR}/${GENIMAGE_CONFIG} > ${B}/.config
 
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
