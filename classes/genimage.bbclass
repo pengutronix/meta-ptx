@@ -141,13 +141,13 @@ addtask genimage after do_configure before do_build
 do_deploy () {
     install ${B}/* ${DEPLOYDIR}/
 
-    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_FULLNAME} ]; then
-        ln -sf ${GENIMAGE_IMAGE_FULLNAME} ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_FULLNAME}
-    fi
-    if [ -e ${DEPLOYDIR}/${GENIMAGE_IMAGE_FULLNAME}.bmap ] ; then
-        ln -sf ${GENIMAGE_IMAGE_FULLNAME}.bmap ${DEPLOYDIR}/${GENIMAGE_IMAGE_LINK_FULLNAME}.bmap
-    fi
-
+    for img in ${B}/*; do
+        img=$(basename "${img}")
+        case "$img" in *"${GENIMAGE_IMAGE_FULLNAME}"*)
+            ln -sf ${img} \
+                ${DEPLOYDIR}/$(echo "${img}" | sed "s/${GENIMAGE_IMAGE_FULLNAME}/${GENIMAGE_IMAGE_LINK_FULLNAME}/")
+        esac
+    done
 }
 
 addtask deploy after do_genimage before do_build
