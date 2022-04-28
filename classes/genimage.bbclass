@@ -63,6 +63,7 @@
 # GENIMAGE_IMAGE_SUFFIX	- file extension suffix for created image (default: 'img')
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
+# GENIMAGE_VARIABLES[VAR]	- replace @VAR@ in config with variable flag value
 
 inherit image-artifact-names deploy
 
@@ -94,6 +95,9 @@ GENIMAGE_IMAGE_LINK_FULLNAME ?= "${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SU
 GENIMAGE_ROOTFS_IMAGE ?= ""
 GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
 
+GENIMAGE_VARIABLES[IMAGE] = "${GENIMAGE_IMAGE_FULLNAME}"
+
+do_genimage[vardeps] += "GENIMAGE_VARIABLES"
 do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
 GENIMAGE_CREATE_BMAP ?= "0"
@@ -103,7 +107,7 @@ GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 GENIMAGE_OPTS ??= ""
 
-do_genimage[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
+do_genimage_preprocess[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
     if ! grep -q "@IMAGE@" ${WORKDIR}/${GENIMAGE_CONFIG}; then
@@ -111,11 +115,27 @@ do_configure () {
     fi
 }
 
-do_genimage[dirs] = "${B}"
+do_genimage_preprocess[dirs] = "${B}"
+
+python do_genimage_preprocess () {
+    def expandvar(m):
+        val = d.getVarFlag('GENIMAGE_VARIABLES', m.group(1), expand=True)
+        if val is None:
+            bb.error("cannot expand variable @%s@ from GENIMAGE_VARIABLES" % m.group(1))
+        return val
+
+    import re
+
+    infile = d.getVar('WORKDIR') + "/" + d.getVar('GENIMAGE_CONFIG')
+    outfile = d.getVar('B') + "/.config"
+
+    with open(infile, "r+") as input:
+        expansion = re.sub(r"@([^{}@\n\t :]+)@", expandvar, input.read())
+    with open(outfile, "w") as output:
+        output.write(expansion)
+}
 
 fakeroot do_genimage () {
-    sed s:@IMAGE@:${GENIMAGE_IMAGE_FULLNAME}:g ${WORKDIR}/${GENIMAGE_CONFIG} > ${B}/.config
-
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
         bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${GENIMAGE_ROOTDIR}"
@@ -139,6 +159,7 @@ fakeroot do_genimage () {
     rm ${B}/.config
 }
 do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
+do_genimage[prefuncs] += "do_genimage_preprocess"
 
 addtask genimage after do_configure before do_build
 
