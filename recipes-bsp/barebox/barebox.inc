@@ -12,7 +12,7 @@ inherit kernel-arch deploy
 inherit cml1
 inherit pkgconfig
 
-DEPENDS = "libusb1-native lzop-native bison-native flex-native"
+DEPENDS = "libusb1-native bison-native flex-native"
 
 PACKAGES += "${PN}-bareboxenv ${PN}-bareboxcrc32 ${PN}-kernel-install \
          ${PN}-bareboximd"
