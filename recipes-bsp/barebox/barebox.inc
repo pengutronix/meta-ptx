@@ -42,10 +42,11 @@ def get_layer_rev(path):
 
 BAREBOX_BUILDSYSTEM_VERSION ??= "${@get_layer_rev(os.path.dirname(d.getVar('FILE')))}"
 
-EXTRA_OEMAKE = " \
+EXTRA_OEMAKE = ' \
   CROSS_COMPILE=${TARGET_PREFIX} -C ${S} O=${B} \
   BUILDSYSTEM_VERSION=${BAREBOX_BUILDSYSTEM_VERSION} \
-"
+  CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS} -mbranch-protection=none" \
+'
 
 do_configure() {
 	if [ -e ${WORKDIR}/defconfig ]; then
