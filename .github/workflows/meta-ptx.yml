@@ -50,3 +50,7 @@ jobs:
         run: |
           source poky/oe-init-build-env build
           bitbake microcom
+      - name: Build platsch
+        run: |
+          source poky/oe-init-build-env build
+          bitbake platsch
