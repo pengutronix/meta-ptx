@@ -64,7 +64,7 @@
 
 inherit deploy
 
-LICENSE = "MIT"
+LICENSE ?= "MIT"
 PACKAGES = ""
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
