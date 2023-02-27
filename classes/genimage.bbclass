@@ -67,7 +67,7 @@
 
 inherit image-artifact-names deploy
 
-LICENSE = "MIT"
+LICENSE ?= "MIT"
 PACKAGES = ""
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
