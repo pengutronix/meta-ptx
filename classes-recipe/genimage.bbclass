@@ -44,6 +44,13 @@
 #
 #   GENIMAGE_ROOTFS_IMAGE_FSTYPE = "tar.xz"
 #
+# Since nanbield the IMAGE_NAME also contains the IMAGE_NAME_SUFFIX, with it
+# being set inside the image-artifact-names.bbclass. This is either '${IMAGE_NAME_SUFFIX}'
+# (default) or the name matching the suffix you set with
+# `GENIMAGE_ROOTFS_IMAGE_SUFFIX`:
+#
+#   GENIMAGE_ROOTFS_IMAGE_SUFFIX = ".rootfs"
+#
 # The split-up is controlled by your genimage config file, using the
 # 'mountpoint' options:
 #
@@ -63,6 +70,7 @@
 # GENIMAGE_IMAGE_SUFFIX	- file extension suffix for created image (default: 'img')
 # GENIMAGE_ROOTFS_IMAGE - input rootfs image to generate file system images from
 # GENIMAGE_ROOTFS_IMAGE_FSTYPE	- input roofs FSTYPE to use (default: 'tar.bz2')
+# GENIMAGE_ROOTFS_IMAGE_SUFFIX	- IMAGE_NAME_SUFFIX to use (default: '${IMAGE_NAME_SUFFIX}')
 # GENIMAGE_VARIABLES[VAR]	- replace @VAR@ in config with variable flag value
 
 inherit image-artifact-names deploy
@@ -94,6 +102,7 @@ GENIMAGE_IMAGE_LINK_FULLNAME ?= "${GENIMAGE_IMAGE_LINK_NAME}.${GENIMAGE_IMAGE_SU
 
 GENIMAGE_ROOTFS_IMAGE ?= ""
 GENIMAGE_ROOTFS_IMAGE_FSTYPE ?= "tar.bz2"
+GENIMAGE_ROOTFS_IMAGE_SUFFIX ?= "${IMAGE_NAME_SUFFIX}"
 
 GENIMAGE_VARIABLES[IMAGE] = "${GENIMAGE_IMAGE_FULLNAME}"
 
@@ -138,8 +147,8 @@ python do_genimage_preprocess () {
 fakeroot do_genimage () {
     # unpack input rootfs image if given
     if [ "x${GENIMAGE_ROOTFS_IMAGE}" != "x" ]; then
-        bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${GENIMAGE_ROOTDIR}"
-        tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
+        bbnote "Unpacking ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}${GENIMAGE_ROOTFS_IMAGE_SUFFIX}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} to ${GENIMAGE_ROOTDIR}"
+        tar -xf ${DEPLOY_DIR_IMAGE}/${GENIMAGE_ROOTFS_IMAGE}-${MACHINE}${GENIMAGE_ROOTFS_IMAGE_SUFFIX}.${GENIMAGE_ROOTFS_IMAGE_FSTYPE} -C ${GENIMAGE_ROOTDIR}
     fi
 
     genimage \
