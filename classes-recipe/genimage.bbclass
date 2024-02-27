@@ -164,7 +164,7 @@ do_genimage[prefuncs] += "do_genimage_preprocess"
 addtask genimage after do_configure before do_build
 
 do_deploy () {
-    install ${B}/* ${DEPLOYDIR}/
+    install -m 0644 ${B}/* ${DEPLOYDIR}/
 
     for img in ${B}/*; do
         img=$(basename "${img}")
