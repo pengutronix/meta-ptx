@@ -101,7 +101,7 @@ do_genimage[vardeps] += "GENIMAGE_VARIABLES"
 do_genimage[depends] += "${@'${GENIMAGE_ROOTFS_IMAGE}:do_image_complete' if '${GENIMAGE_ROOTFS_IMAGE}' else ''}"
 
 GENIMAGE_CREATE_BMAP ?= "0"
-do_genimage[depends] += "${@'bmap-tools-native:do_populate_sysroot' if d.getVar('GENIMAGE_CREATE_BMAP') == '1' else ''}"
+do_genimage[depends] += "${@'bmaptool-native:do_populate_sysroot' if d.getVar('GENIMAGE_CREATE_BMAP') == '1' else ''}"
 
 GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
