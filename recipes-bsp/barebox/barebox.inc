@@ -12,7 +12,7 @@ inherit kernel-arch deploy
 inherit cml1
 inherit pkgconfig
 
-DEPENDS = "libusb1-native lzop-native bison-native flex-native"
+DEPENDS = "libusb1-native lzop-native bison-native flex-native rsync-native"
 
 PACKAGES += "${PN}-bareboxenv ${PN}-bareboxcrc32 ${PN}-kernel-install \
          ${PN}-bareboximd"
@@ -47,42 +47,38 @@ EXTRA_OEMAKE = " \
   BUILDSYSTEM_VERSION=${BAREBOX_BUILDSYSTEM_VERSION} \
 "
 
-do_configure() {
-	if [ -e ${WORKDIR}/defconfig ]; then
-		cp ${WORKDIR}/defconfig ${B}/.config
-	else
-		if [ -n "${BAREBOX_CONFIG}" ]; then
-			oe_runmake ${BAREBOX_CONFIG}
-		else
-			bbfatal "No defconfig given. Either add file 'file://defconfig' to SRC_URI or set BAREBOX_CONFIG"
-		fi
-	fi
-
-	${S}/scripts/kconfig/merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
-	cml1_do_configure
-}
-
 BAREBOX_FIRMWARE_DIR ?= ""
 BAREBOX_FIRMWARE_DIR[doc] = "Overwrite barebox' firmware blobs search directory (CONFIG_EXTRA_FIRMWARE_DIR) with this path"
 
-do_compile () {
-	# If there is an 'env' directory, append its content
-	# to the compiled environment
-	if [ -d ${WORKDIR}/env/ ]; then \
-		mkdir -p ${S}/.yocto-defaultenv
-		cp -r ${WORKDIR}/env/* ${S}/.yocto-defaultenv/; \
-		grep -q .yocto-defaultenv ${B}/.config || \
-	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
-		                ${B}/.config; \
-
+do_configure() {
+	if [ -e ${WORKDIR}/defconfig ]; then
+		cp ${WORKDIR}/defconfig ${B}/.config
+	elif [ -n "${BAREBOX_CONFIG}" ]; then
+		oe_runmake ${BAREBOX_CONFIG}
+	else
+		bbfatal "No defconfig given. Either add file 'file://defconfig' to SRC_URI or set BAREBOX_CONFIG"
 	fi
+
+	# Merge 'env*' directories into the compiled environment
+	mkdir -p ${S}/.defaultenv
+	find ${WORKDIR} -mindepth 1 -maxdepth 1 -type d -name 'env*' -execdir rsync -av '{}/' ${S}/.defaultenv ';'
+	echo "CONFIG_DEFAULT_ENVIRONMENT_PATH=\"${S}/.defaultenv\"" > ${B}/.defaultenv.cfg
 
 	# If ${BAREBOX_FIRMWARE_DIR} is set, use that for CONFIG_EXTRA_FIRMWARE_DIR
+	touch ${B}/.firmware.cfg
 	if [ -n "${BAREBOX_FIRMWARE_DIR}" ]; then
-		sed -i -e "s,^\(CONFIG_EXTRA_FIRMWARE_DIR=\"\).*\"$,\1${BAREBOX_FIRMWARE_DIR}\"," \
-				${B}/.config
+		echo "CONFIG_EXTRA_FIRMWARE_DIR=\"${BAREBOX_FIRMWARE_DIR}\"" > ${B}/.firmware.cfg
 	fi
 
+	${S}/scripts/kconfig/merge_config.sh -m ${B}/.config \
+		${B}/.defaultenv.cfg \
+		${B}/.firmware.cfg \
+		${@" ".join(find_cfgs(d))}
+
+	cml1_do_configure
+}
+
+do_compile () {
 	# Barebox uses pkg-config only for building native tools
 	export PKG_CONFIG_LIBDIR="${STAGING_DIR_NATIVE}${libdir}/pkgconfig:${STAGING_DIR_NATIVE}/usr/share/pkgconfig"
 	export PKG_CONFIG_SYSROOT_DIR=
