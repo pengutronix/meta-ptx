@@ -82,7 +82,8 @@ PACKAGES = ""
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 B = "${WORKDIR}/genimage-${PN}"
 
@@ -133,7 +134,7 @@ GENIMAGE_OPTS ??= ""
 do_genimage_preprocess[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
-    if ! grep -q "@IMAGE@" ${WORKDIR}/${GENIMAGE_CONFIG}; then
+    if ! grep -q "@IMAGE@" ${S}/${GENIMAGE_CONFIG}; then
         bbnote "${GENIMAGE_CONFIG} does not contain @IMAGE@ marker"
     fi
 }
@@ -149,7 +150,7 @@ python do_genimage_preprocess () {
 
     import re
 
-    infile = d.getVar('WORKDIR') + "/" + d.getVar('GENIMAGE_CONFIG')
+    infile = d.getVar('S') + "/" + d.getVar('GENIMAGE_CONFIG')
     outfile = d.getVar('B') + "/.config"
 
     with open(infile, "r+") as input:
@@ -170,7 +171,7 @@ fakeroot do_genimage () {
         --config ${B}/.config \
         --tmppath ${GENIMAGE_TMPDIR} \
         --inputpath ${DEPLOY_DIR_IMAGE} \
-        --includepath ${WORKDIR} \
+        --includepath ${S} \
         --outputpath ${B} \
         --rootpath ${GENIMAGE_ROOTDIR} \
         ${GENIMAGE_OPTS}
