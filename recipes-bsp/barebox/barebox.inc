@@ -48,8 +48,8 @@ EXTRA_OEMAKE = " \
 "
 
 do_configure() {
-	if [ -e ${WORKDIR}/defconfig ]; then
-		cp ${WORKDIR}/defconfig ${B}/.config
+	if [ -e ${UNPACKDIR}/defconfig ]; then
+		cp ${UNPACKDIR}/defconfig ${B}/.config
 	else
 		if [ -n "${BAREBOX_CONFIG}" ]; then
 			oe_runmake ${BAREBOX_CONFIG}
@@ -68,9 +68,9 @@ BAREBOX_FIRMWARE_DIR[doc] = "Overwrite barebox' firmware blobs search directory 
 do_compile () {
 	# If there is an 'env' directory, append its content
 	# to the compiled environment
-	if [ -d ${WORKDIR}/env/ ]; then \
+	if [ -d ${UNPACKDIR}/env/ ]; then \
 		mkdir -p ${S}/.yocto-defaultenv
-		cp -r ${WORKDIR}/env/* ${S}/.yocto-defaultenv/; \
+		cp -r ${UNPACKDIR}/env/* ${S}/.yocto-defaultenv/; \
 		grep -q .yocto-defaultenv ${B}/.config || \
 	        sed -i -e "s,^\(CONFIG_DEFAULT_ENVIRONMENT_PATH=.*\)\"$,\1 .yocto-defaultenv\"," \
 		                ${B}/.config; \
