@@ -9,16 +9,17 @@ SRC_URI = "\
   file://systemd-rc-once \
   "
 
-S = "${WORKDIR}"
+S = "${WORKDIR}/sources"
+UNPACKDIR = "${S}"
 
 inherit allarch systemd
 
 do_install() {
 	install -d ${D}${base_libdir}/init
-	install -m 0755 ${WORKDIR}/rc-once.sh ${D}${base_libdir}/init/
+	install -m 0755 ${S}/rc-once.sh ${D}${base_libdir}/init/
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0755 ${WORKDIR}/systemd-rc-once ${D}${systemd_unitdir}/
-	install -m 0644 ${WORKDIR}/rc-once.service ${D}${systemd_unitdir}/system/
+	install -m 0755 ${S}/systemd-rc-once ${D}${systemd_unitdir}/
+	install -m 0644 ${S}/rc-once.service ${D}${systemd_unitdir}/system/
 	install -d ${D}${systemd_unitdir}/system/system-update.target.wants
 	ln -sf ../rc-once.service ${D}${systemd_unitdir}/system/system-update.target.wants/rc-once.service
 	install -d ${D}${sysconfdir}/rc.once.d
