@@ -26,21 +26,20 @@ BOOTSPEC_OPTIONS_squashfs-xz = "rootfstype=squashfs"
 BOOTSPEC_VERSION ?= "${PV}"
 BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
 
-BOOTSPEC_OPTIONS_DEFAULT = ""
-
-python () {
+# Search in IMAGE_FSTYPES for a type we have a default for
+def bootspec_default_option(d):
     for type in (d.getVar('IMAGE_FSTYPES') or "").split():
         option = d.getVar('BOOTSPEC_OPTIONS_%s' % type)
         if option:
-            d.setVar('BOOTSPEC_OPTIONS_DEFAULT', option)
-            break;
+            return option
 
+python () {
     if d.getVar('PREFERRED_PROVIDER_virtual/dtb'):
         d.appendVarFlag('do_rootfs', 'depends', ' virtual/dtb:do_populate_sysroot')
         d.setVar('EXTERNAL_KERNEL_DEVICETREE', '${RECIPE_SYSROOT}/boot/devicetree')
 }
 
-BOOTSPEC_OPTIONS ?= "${BOOTSPEC_OPTIONS_DEFAULT}"
+BOOTSPEC_OPTIONS ?= "${@bootspec_default_option(d)}"
 BOOTSPEC_OPTIONS[doc] = "Content of the boot spec entry 'options' line"
 
 BOOTSPEC_EXTRALINE ?= ""
