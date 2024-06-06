@@ -185,6 +185,7 @@ fakeroot do_genimage () {
 }
 do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
 do_genimage[prefuncs] += "do_genimage_preprocess"
+SSTATE_SKIP_CREATION:task-genimage = '1'
 
 addtask genimage after do_configure
 
