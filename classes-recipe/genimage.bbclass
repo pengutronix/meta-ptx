@@ -187,7 +187,7 @@ fakeroot do_genimage () {
 do_genimage[depends] += "virtual/fakeroot-native:do_populate_sysroot"
 do_genimage[prefuncs] += "do_genimage_preprocess"
 
-addtask genimage after do_configure before do_build
+addtask genimage after do_configure
 
 do_deploy () {
     install -m 0644 ${B}/* ${DEPLOYDIR}/
