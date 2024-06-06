@@ -15,8 +15,6 @@ BOOTSPEC_VERSION[doc] ?= "Content of the bootspec version entry"
 BOOTSPEC_OPTIONS_DEFAULT = ""
 
 python () {
-    option = ""
-
     for type in (d.getVar('IMAGE_FSTYPES') or "").split():
         option = d.getVar('BOOTSPEC_OPTIONS_%s' % type)
         if option:
