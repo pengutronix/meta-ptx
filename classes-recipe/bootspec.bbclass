@@ -56,7 +56,7 @@ python create_bootspec() {
 
         bootspecfile.write('title      %s\n' % d.getVar('BOOTSPEC_TITLE'))
         bootspecfile.write('version    %s\n' % d.getVar('BOOTSPEC_VERSION'))
-        bootspecfile.write('options    %s\n' % d.expand('${BOOTSPEC_OPTIONS}'))
+        bootspecfile.write('options    %s\n' % d.getVar('BOOTSPEC_OPTIONS'))
         bootspecfile.write(d.getVar('BOOTSPEC_EXTRALINE').replace(r'\n', '\n'))
         bootspecfile.write('linux      %s\n' % d.expand('/boot/${KERNEL_IMAGETYPE}'))
         if x != "default":
