@@ -1,4 +1,18 @@
-# Adds boot spec entry for first FSTYPE found
+# Class for adding a basic bootloader specification file to rootfs images
+#
+# For more information, see:
+# https://uapi-group.org/specifications/specs/boot_loader_specification/
+#
+# To use the class in your image recipe, simply add
+#
+#   inherit bootspec
+#
+# This will create a bootspec entry for each devicetree found in
+# KERNEL_DEVICETREE and EXTERNAL_KERNEL_DEVICETREE.
+# For machines not using devicetree, it will create a single default.conf.
+#
+# The bootspec lines generated can be customized with the BOOTSPEC_TITLE,
+# BOOTSPEC_VERSION, BOOTSPEC_OPTIONS and BOOTSPEC_EXTRALINE variables.
 
 BOOTSPEC_TITLE ?= "${SUMMARY}"
 BOOTSPEC_TITLE[doc] = "Content of the boot spec entry 'title' line"
