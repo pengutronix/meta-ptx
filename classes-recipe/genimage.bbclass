@@ -75,7 +75,7 @@
 # GENIMAGE_COMPRESSION - compress the generated image. Allowed values
 # are 'none' for no compression (the default), 'gzip' and 'xz'.
 
-inherit image-artifact-names deploy
+inherit nopackages image-artifact-names deploy
 
 LICENSE ?= "MIT"
 PACKAGES = ""
@@ -207,10 +207,4 @@ do_patch[noexec] = "1"
 do_compile[noexec] = "1"
 do_install[noexec] = "1"
 deltask do_populate_sysroot
-do_package[noexec] = "1"
-deltask do_package_qa
-do_packagedata[noexec] = "1"
-deltask do_package_write_ipk
-deltask do_package_write_deb
-deltask do_package_write_rpm
 
