@@ -34,6 +34,8 @@ BOOTSPEC_OPTIONS[doc] = "Content of the boot spec entry 'options' line"
 BOOTSPEC_EXTRALINE ?= ""
 BOOTSPEC_EXTRALINE[doc] = "Allows to add extra content to bootspec entries, lines must be terminated with a newline"
 
+do_rootfs[vardeps] += "BOOTSPEC_TITLE BOOTSPEC_VERSION BOOTSPEC_OPTIONS BOOTSPEC_EXTRALINE"
+
 python create_bootspec() {
     dtbs = (d.getVar('KERNEL_DEVICETREE') or '').split()
     ext_dtbs = os.listdir(d.getVar('EXTERNAL_KERNEL_DEVICETREE')) if d.getVar('EXTERNAL_KERNEL_DEVICETREE') else []
