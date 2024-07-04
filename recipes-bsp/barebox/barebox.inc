@@ -118,7 +118,7 @@ do_install() {
 }
 
 # Suffix that allows to create different barebox images in one BSP
-BAREBOX_IMAGE_SUFFIX = ""
+BAREBOX_IMAGE_SUFFIX ?= ""
 # This allows a machine.conf to specify the required images to install instead
 # of installing all found images
 BAREBOX_IMAGES ??= "*.img"
