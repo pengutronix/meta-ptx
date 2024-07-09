@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 DEPENDS = "confuse"
 
-SRC_URI = "http://www.pengutronix.de/software/genimage/download/genimage-${PV}.tar.xz"
+SRC_URI = "https://github.com/pengutronix/genimage/releases/download/v${PV}/genimage-${PV}.tar.xz"
 
 EXTRA_OECONF = "--enable-largefile"
 
