@@ -26,7 +26,7 @@
 # Note that you should also make your genimage image recipe depend on the set
 # of host tools required for building, e.g.
 #
-#   DEPENDS += "e2fsprogs-native genext2fs-native"
+#   DEPENDS += "e2fsprogs-native"
 #
 # You can also use genimage to split up a created rootfs into different
 # partition images. Consider a yocto-created rootfs, for example.
