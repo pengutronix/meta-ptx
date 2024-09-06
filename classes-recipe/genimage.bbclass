@@ -1,10 +1,10 @@
 # genimage.bbclass
 #
-# Class to generate disk images using the `genimage` tool.
+# Class to generate file system and disk images using the `genimage` tool.
 #
-# In order to build an image, your recipe must inherit the genimage class and
-# have a valid genimage configuration file in SRC_URI, named `genimage.config`
-# by default.
+# In order to build images with this class, you need to create a dedicated disk
+# image recipe! This must inherit the genimage class and have a valid genimage
+# configuration file in SRC_URI (named `genimage.config` by default):
 #
 #   inherit genimage
 #
