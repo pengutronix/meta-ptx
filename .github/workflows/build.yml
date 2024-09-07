@@ -36,6 +36,7 @@ jobs:
       - name: Initialize build directory
         run: |
           source poky/oe-init-build-env build
+          bitbake-layers add-layer ../meta-openembedded/meta-oe
           bitbake-layers add-layer ../meta-ptx
           if [ -f ~/.yocto/auto.conf ]; then
             cp ~/.yocto/auto.conf conf/
