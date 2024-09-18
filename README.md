@@ -23,7 +23,7 @@ Patches
 Please submit any patches against the ptx layer as Pull Request to GitHub
 repository https://github.com/pengutronix/meta-ptx
 
-Maintainer: Enrico Joerns <e.joerns@pengutronix.de>
+Maintainer: Enrico Jörns <yocto@pengutronix.de>
 
 Table of Contents
 =================
