@@ -31,18 +31,4 @@ Maintainer: Enrico Jörns <yocto@pengutronix.de>
 Adding the ptx layer to your build
 ==================================
 
-In order to use this layer, you need to make the build system aware of
-it.
-
-Assuming the ptx layer exists at the top-level of your
-yocto build tree, you can add it to the build system by adding the
-location of the ptx layer to bblayers.conf, along with any
-other layers needed. e.g.:
-
-    BBLAYERS ?= " \
-      /path/to/yocto/meta \
-      /path/to/yocto/meta-yocto \
-      /path/to/yocto/meta-yocto-bsp \
-      /path/to/yocto/meta-ptx \
-      "
-
+Run ``bitbake-layers add-layer meta-ptx``.
