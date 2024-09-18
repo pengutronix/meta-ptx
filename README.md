@@ -25,14 +25,9 @@ repository https://github.com/pengutronix/meta-ptx
 
 Maintainer: Enrico Jörns <yocto@pengutronix.de>
 
-Table of Contents
-=================
 
-  I. Adding the ptx layer to your build
-
-
-I. Adding the ptx layer to your build
-=====================================
+Adding the ptx layer to your build
+==================================
 
 In order to use this layer, you need to make the build system aware of
 it.
