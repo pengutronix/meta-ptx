@@ -4,8 +4,6 @@ The meta-ptx layer provides support for the `barebox` bootloader,
 the `genimage` image generation mechanism, and some other useful tools and
 patches
 
-It provides it own sample distro `ptx` which is based on systemd.
-
 Dependencies
 ============
 
