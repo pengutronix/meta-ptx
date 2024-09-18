@@ -26,6 +26,10 @@ This layer depends on:
     layers: meta
     branch: master
 
+    URI: https://github.com/openembedded/meta-openembedded.git
+    layers: meta-oe
+    branch: master
+
 
 Patches
 =======
