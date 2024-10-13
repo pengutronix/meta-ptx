@@ -4,7 +4,6 @@ The meta-ptx layer provides support for classes and recipes that are meant to
 be public but did not make it into any other common layer, yet.
 Currently, it provides:
 
-* a recipe for the `barebox` bootloader
 * the [genimage.bbclass](https://github.com/pengutronix/meta-ptx/blob/master/classes-recipe/genimage.bbclass)
   for creating images using genimage
 * a recipe for [platsch](https://github.com/pengutronix/platsch), an early splash screen application
