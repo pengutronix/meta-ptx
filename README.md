@@ -20,15 +20,15 @@ Dependencies
 This layer depends on:
 
     URI: git://git.openembedded.org/bitbake
-    branch: master
+    branch: styhead
 
     URI: git://git.openembedded.org/openembedded-core
     layers: meta
-    branch: master
+    branch: styhead
 
     URI: https://github.com/openembedded/meta-openembedded.git
     layers: meta-oe
-    branch: master
+    branch: styhead
 
 
 Patches
