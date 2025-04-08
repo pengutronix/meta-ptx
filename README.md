@@ -11,7 +11,6 @@ Currently, it provides:
 * a recipe for [platsch](https://github.com/pengutronix/platsch), an early splash screen application
 * the [platsch.bbclass](https://github.com/pengutronix/meta-ptx/blob/master/classes-recipe/platsch.bbclass)
   for creating splash image recipes
-* a recipe for the [memtool](https://github.com/pengutronix/memtool) utility
 * the [bootspec.bbclass](https://github.com/pengutronix/meta-ptx/blob/master/classes-recipe/bootspec.bbclass)
   for adding [bootloader specification](https://uapi-group.org/specifications/specs/boot_loader_specification/) files to the rootfs
 
