@@ -1,6 +1,6 @@
-| master | walnascar |styhead | scarthgap | kirkstone |
-| ------ | --------- | ------- | --------- | --------- |
-| [![build (master)][gh_badge_master]][gh_action_master] | [![build (walnascar)][gh_badge_walnascar]][gh_action_walnascar] | [![build (styhead)][gh_badge_styhead]][gh_action_styhead] | [![build (scarthgap)][gh_badge_scarthgap]][gh_action_scarthgap] | [![build (kirkstone)][gh_badge_kirkstone]][gh_action_kirkstone] |
+| master | walnascar | scarthgap | kirkstone |
+| ------ | --------- | --------- | --------- |
+| [![build (master)][gh_badge_master]][gh_action_master] | [![build (walnascar)][gh_badge_walnascar]][gh_action_walnascar] | [![build (scarthgap)][gh_badge_scarthgap]][gh_action_scarthgap] | [![build (kirkstone)][gh_badge_kirkstone]][gh_action_kirkstone] |
 
 The meta-ptx layer provides support for classes and recipes that are meant to
 be public but did not make it into any other common layer, yet.
@@ -46,12 +46,10 @@ Run ``bitbake-layers add-layer meta-ptx``.
 
 [gh_action_master]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Amaster++
 [gh_action_walnascar]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Awalnascar++
-[gh_action_styhead]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Astyhead++
 [gh_action_scarthgap]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Ascarthgap++
 [gh_action_kirkstone]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Akirkstone++
 
 [gh_badge_master]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=master&event=workflow_dispatch
 [gh_badge_walnascar]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=walnascar&event=workflow_dispatch
-[gh_badge_styhead]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=styhead&event=workflow_dispatch
 [gh_badge_scarthgap]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=scarthgap&event=workflow_dispatch
 [gh_badge_kirkstone]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=kirkstone&event=workflow_dispatch
