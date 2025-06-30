@@ -87,8 +87,7 @@ python () {
         bb.fatal("genimage.bbclass is not designed to be inherited by a rootfs image recipe!")
 }
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 B = "${WORKDIR}/genimage-${PN}"
 
