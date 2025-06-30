@@ -9,8 +9,7 @@ SRC_URI = "\
   file://systemd-rc-once \
   "
 
-S = "${WORKDIR}/sources"
-UNPACKDIR = "${S}"
+S = "${UNPACKDIR}"
 
 inherit allarch systemd
 
