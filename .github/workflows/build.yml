@@ -26,13 +26,15 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: meta-ptx
-      - name: Clone poky
-        run: git clone --shared --reference-if-able /srv/shared-git/poky.git -b master https://github.com/yoctoproject/poky.git
+      - name: Clone bitbake
+        run: git clone --shared --reference-if-able /srv/shared-git/bitbake.git -b master https://github.com/openembedded/bitbake.git
+      - name: Clone openembedded-core
+        run: git clone --shared --reference-if-able /srv/shared-git/openembedded-core.git -b master https://github.com/openembedded/openembedded-core.git
       - name: Clone meta-openembedded
         run: git clone --shared --reference-if-able /srv/shared-git/meta-openembedded.git -b master https://github.com/openembedded/meta-openembedded.git
       - name: Initialize build directory
         run: |
-          source poky/oe-init-build-env build
+          source openembedded-core/oe-init-build-env build
           bitbake-layers add-layer ../meta-openembedded/meta-oe
           bitbake-layers add-layer ../meta-ptx
           if [ -f ~/.yocto/auto.conf ]; then
@@ -47,11 +49,11 @@ jobs:
           echo 'DISTRO_FEATURES:remove = "alsa bluetooth usbgadget usbhost wifi nfs zeroconf pci 3g nfc x11 opengl ptest wayland vulkan"' >> conf/local.conf
       - name: Build genimage, genimage-native
         run: |
-          source poky/oe-init-build-env build
+          source openembedded-core/oe-init-build-env build
           bitbake genimage genimage-native
       - name: Build platsch
         run: |
-          source poky/oe-init-build-env build
+          source openembedded-core/oe-init-build-env build
           bitbake platsch
       - name: Cache Data
         env:
