@@ -142,6 +142,9 @@ GENIMAGE_TMPDIR  = "${WORKDIR}/genimage-tmp"
 GENIMAGE_ROOTDIR  = "${WORKDIR}/root"
 GENIMAGE_OPTS ??= ""
 
+PSEUDO_INCLUDE_PATHS .= ",${GENIMAGE_ROOTDIR}"
+PSEUDO_INCLUDE_PATHS .= ",${GENIMAGE_TMPDIR}"
+
 do_genimage_preprocess[cleandirs] = "${GENIMAGE_TMPDIR} ${GENIMAGE_ROOTDIR} ${B}"
 
 do_configure () {
