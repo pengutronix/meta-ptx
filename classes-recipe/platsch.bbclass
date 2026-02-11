@@ -99,6 +99,29 @@ platsch_do_compile() {
                     -strip -type TrueColor -define bmp:subtype=${SPLASH_FORMAT} bmp:- | \
                     tail -c ${SIZE_OF_RAW_BITMAP} > ${B}/${BASE}-${WIDTH}x${HEIGHT}-${SPLASH_FORMAT}.bin
                 ;;
+            XRGB8888)
+                # HACK: a quite compact way to create a bitmap in the XRGB8888 format is to
+                # let ImageMagick convert the source into its known BMP subtype XRGB8888 and
+                # to strip the BMP header by only using the final width * height * (8+8+8+8)/8
+                # bytes. For the i.MX6/i.MX8 the bitmap needs to be flipped (see [1]). This
+                # is done via the bitbake parameter SPLASH_MGK_CUSTOM_OPTION (see [2]). As
+                # the BMP format stores potential color profiles behind the desired pixel
+                # array at the end of the file those particularly need to be dropped before
+                # by the option "-strip" to let the hack succeed (see [3]). Explicitly
+                # request an XRGB format to avoid a color map (via asking for the TrueColor-
+                # Alpha type, see [4]).
+                #
+                # [1] https://github.com/pengutronix/meta-ptx/pull/117#issuecomment-1474786927
+                # [2] https://imagemagick.org/script/command-line-options.php#flip
+                # [3] https://imagemagick.org/script/command-line-options.php#strip
+                # [4] https://imagemagick.org/script/command-line-options.php#type
+                #
+                SIZE_OF_RAW_BITMAP=$(expr ${WIDTH} "*" ${HEIGHT} "*" "(" 8 + 8 + 8 + 8 ")" / 8)
+                env MAGICK_CONFIGURE_PATH=${RECIPE_SYSROOT_NATIVE}/etc/ImageMagick-7 magick.im7 \
+                    ${WORKDIR}/${IMG} ${SPLASH_MGK_CUSTOM_OPTION} \
+                    -strip -type TrueColorAlpha -define bmp:subtype=${SPLASH_FORMAT} bmp:- | \
+                    tail -c ${SIZE_OF_RAW_BITMAP} > ${B}/${BASE}-${WIDTH}x${HEIGHT}-${SPLASH_FORMAT}.bin
+                ;;
             *)
                 bbfatal "platsch.bbclass: unknown SPLASH_FORMAT \"${SPLASH_FORMAT}\"."
                 ;;
