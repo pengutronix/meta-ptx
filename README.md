@@ -1,6 +1,6 @@
-| master | whinlatter | scarthgap |
+| master | wrynose | scarthgap |
 | ------ | --------- | --------- |
-| [![build (master)][gh_badge_master]][gh_action_master] | [![build (whinlatter)][gh_badge_whinlatter]][gh_action_whinlatter] | [![build (scarthgap)][gh_badge_scarthgap]][gh_action_scarthgap] |
+| [![build (master)][gh_badge_master]][gh_action_master] | [![build (wrynose)][gh_badge_wrynose]][gh_action_wrynose] | [![build (scarthgap)][gh_badge_scarthgap]][gh_action_scarthgap] |
 
 The meta-ptx layer provides support for classes and recipes that are meant to
 be public but did not make it into any other common layer, yet.
@@ -45,9 +45,9 @@ Adding the ptx layer to your build
 Run ``bitbake-layers add-layer meta-ptx``.
 
 [gh_action_master]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Amaster++
-[gh_action_whinlatter]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Awhinlatter++
+[gh_action_wrynose]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Awrynose++
 [gh_action_scarthgap]: https://github.com/pengutronix/meta-ptx/actions?query=event%3Aworkflow_dispatch+branch%3Ascarthgap++
 
 [gh_badge_master]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=master&event=workflow_dispatch
-[gh_badge_whinlatter]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=whinlatter&event=workflow_dispatch
+[gh_badge_wrynose]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=wrynose&event=workflow_dispatch
 [gh_badge_scarthgap]: https://github.com/pengutronix/meta-ptx/actions/workflows/build.yml/badge.svg?branch=scarthgap&event=workflow_dispatch
