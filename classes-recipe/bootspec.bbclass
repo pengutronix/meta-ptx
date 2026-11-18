@@ -80,7 +80,7 @@ python create_bootspec() {
         bootspecfile.close()
 }
 
-ROOTFS_POSTPROCESS_COMMAND += " create_bootspec; "
+ROOTFS_POSTPROCESS_COMMAND += "create_bootspec"
 
 IMAGE_INSTALL:append = " kernel-image"
 IMAGE_INSTALL:append = '${@ " kernel-devicetree" if d.getVar('KERNEL_DEVICETREE') else ""}'
